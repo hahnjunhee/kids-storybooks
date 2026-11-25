@@ -8,9 +8,12 @@ GitHub Pages 기반 공개 정적 그림책 도서관입니다. 모바일에서 
 - `books/lulu-friends.html` — 《루루야, 나도 같이 놀아도 돼?》
 - `books/sea-otter.html` — 《루아와 해달의 신비로운 바다숲》
 - `books/yeongheung-seaside.html` — 《반짝반짝 영흥도 바다 여행》
+- `books/craft-museum-gardener.html` — 《꽃을 피우다, 정원사》
+- `books/korean-dinosaur-storybook.html` — 《루아와 공룡이 남긴 비밀》 (현재 v1.5)
 
 ## 제작·운영 기준
-- [그림책 제작 가이드라인 v2.0](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
+- [그림책 제작 가이드라인 v3.1](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
+- [이미지 스타일 가이드 v2.3.1](docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md) — 삽화 유형·품질 기준
 - [도서관 운영 가이드](docs/BOOK_LIBRARY_OPERATIONS.md) — 새 책 등록, 공개 경로, 배포 확인
 
 주인공의 기본 별칭은 **루아**이며, 작품별로 바꾸거나 생략할 수 있습니다. 실제 아동 이름은 공개 콘텐츠에 사용하지 않습니다.
