@@ -11,6 +11,8 @@ GitHub Pages 기반 공개 정적 그림책 도서관입니다. 모바일에서 
 - `books/craft-museum-gardener.html` — 《꽃을 피우다, 정원사》
 - `books/korean-dinosaur-storybook.html` — 《루아와 공룡이 남긴 비밀》 (현재 v1.5)
 
+- `books/korean-electric-eel-storybook.html` — 《찌릿찌릿! 전기뱀장어의 비밀》 (v1.0.1)
+
 ## 제작·운영 기준
 - [그림책 제작 가이드라인 v3.1](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
 - [이미지 스타일 가이드 v2.3.1](docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md) — 삽화 유형·품질 기준
