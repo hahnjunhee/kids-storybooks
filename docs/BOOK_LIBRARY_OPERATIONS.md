@@ -15,6 +15,7 @@ books/sea-otter.html
 books/yeongheung-seaside.html
 books/craft-museum-gardener.html
 books/korean-dinosaur-storybook.html
+books/korean-electric-eel-storybook.html
 assets/cover-*.webp, cover-yeongheung.svg
 docs/STORYBOOK_GUIDELINES.md
 docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md
@@ -37,6 +38,8 @@ docs/BOOK_LIBRARY_OPERATIONS.md
 | 반짝반짝 영흥도 바다 여행 | `books/yeongheung-seaside.html` |
 | 꽃을 피우다, 정원사 | `books/craft-museum-gardener.html` |
 | 루아와 공룡이 남긴 비밀 (v1.5) | `books/korean-dinosaur-storybook.html` |
+
+| 찌릿찌릿! 전기뱀장어의 비밀 (v1.0.1) | `books/korean-electric-eel-storybook.html` |
 
 공룡동화 `-v1.5.html`은 대표 파일과 내용이 동일한 보존본, `-v1.3.html`은 이전 버전이다. 책장 링크는 대표 파일만 사용한다.
 
