@@ -1,8 +1,96 @@
 [
- {"id":"lulu-friends","title":"루루야, 나도 같이 놀아도 돼?","desc":"새로운 친구에게 다가가는 용기, 속상할 때 다시 일어서는 힘을 배우는 이야기.","series":"루루의 반짝반짝 마음","no":1,"cover":"assets/cover-lulu.webp","alt":"마법의 숲에 있는 아기 유니콘 루루","href":"books/lulu-friends.html","tags":["friendship","feelings"],"info":"약 7분"},
- {"id":"sea-otter","title":"루아와 해달의 신비로운 바다숲","desc":"해달과 함께 신비로운 바다숲을 탐험하는 과학 생활 그림책.","series":"반짝반짝 과학 생활 그림책","no":2,"cover":"assets/cover-sea-otter.webp","alt":"루아와 해달의 신비로운 바다숲 삽화","href":"books/sea-otter.html","tags":["science"],"info":"10장면"},
- {"id":"yeongheung","title":"반짝반짝 영흥도 바다 여행","desc":"바다와 갯벌에서 짱뚱어와 게를 만나고 가족과 새로운 세상을 발견하는 여행.","series":"반짝반짝 과학 생활 그림책","no":3,"cover":"assets/cover-yeongheung.svg","alt":"영흥도 바다와 갯벌 여행","href":"books/yeongheung-seaside.html","tags":["science","habit"],"info":"12장면"},
- {"id":"craft-museum","title":"꽃을 피우다, 정원사","desc":"공예박물관을 둘러보고 내 손으로 작품을 만들어 이름을 붙이는 이야기.","series":"반짝반짝 생활 그림책","no":4,"cover":"assets/cover-craft-museum.webp","alt":"가을 잔디밭에서 작품을 안고 웃는 루아","href":"books/craft-museum-gardener.html","tags":["feelings","habit"],"info":"12장면"},
- {"id":"dinosaur","title":"루아와 공룡이 남긴 비밀","desc":"다섯 가지 화석 단서를 찾아 떠나는 백악기 시간 여행.","series":"반짝반짝 과학 생활 그림책","no":5,"cover":"assets/cover-dinosaur.webp","alt":"루아와 공룡이 남긴 비밀","href":"books/korean-dinosaur-storybook.html","tags":["science"],"info":"12장면"},
- {"id":"electric-eel","title":"찌릿찌릿! 전기뱀장어의 비밀","desc":"아마존에서 찌릿이를 만나 전기를 만드는 몸과 신비한 능력을 알아보는 과학 탐험.","series":"반짝반짝 과학 그림책","no":6,"cover":"assets/cover-electric-eel.webp","alt":"아마존 강가의 꼬마 탐험가와 전기뱀장어","href":"books/korean-electric-eel-storybook.html","tags":["science"],"info":"12장면","new":true}
+  {
+    "id": "lulu-friends",
+    "title": "루루야, 나도 같이 놀아도 돼?",
+    "desc": "새로운 친구에게 다가가는 용기, 속상할 때 다시 일어서는 힘을 배우는 이야기.",
+    "series": "루루의 반짝반짝 마음",
+    "no": 1,
+    "cover": "assets/cover-lulu.webp",
+    "alt": "마법의 숲에 있는 아기 유니콘 루루",
+    "href": "books/lulu-friends.html",
+    "tags": [
+      "friendship",
+      "feelings"
+    ],
+    "info": "약 7분",
+    "publishedAt": "2026-11-21"
+  },
+  {
+    "id": "sea-otter",
+    "title": "루아와 해달의 신비로운 바다숲",
+    "desc": "해달과 함께 신비로운 바다숲을 탐험하는 과학 생활 그림책.",
+    "series": "반짝반짝 과학 생활 그림책",
+    "no": 2,
+    "cover": "assets/cover-sea-otter.webp",
+    "alt": "루아와 해달의 신비로운 바다숲 삽화",
+    "href": "books/sea-otter.html",
+    "tags": [
+      "science"
+    ],
+    "info": "10장면",
+    "publishedAt": "2026-11-22"
+  },
+  {
+    "id": "yeongheung",
+    "title": "반짝반짝 영흥도 바다 여행",
+    "desc": "바다와 갯벌에서 짱뚱어와 게를 만나고 가족과 새로운 세상을 발견하는 여행.",
+    "series": "반짝반짝 과학 생활 그림책",
+    "no": 3,
+    "cover": "assets/cover-yeongheung.svg",
+    "alt": "영흥도 바다와 갯벌 여행",
+    "href": "books/yeongheung-seaside.html",
+    "tags": [
+      "science",
+      "habit"
+    ],
+    "info": "12장면",
+    "publishedAt": "2026-11-22"
+  },
+  {
+    "id": "craft-museum",
+    "title": "꽃을 피우다, 정원사",
+    "desc": "공예박물관을 둘러보고 내 손으로 작품을 만들어 이름을 붙이는 이야기.",
+    "series": "반짝반짝 생활 그림책",
+    "no": 4,
+    "cover": "assets/cover-craft-museum.webp",
+    "alt": "가을 잔디밭에서 작품을 안고 웃는 루아",
+    "href": "books/craft-museum-gardener.html",
+    "tags": [
+      "feelings",
+      "habit"
+    ],
+    "info": "12장면",
+    "publishedAt": "2026-11-22"
+  },
+  {
+    "id": "dinosaur",
+    "title": "루아와 공룡이 남긴 비밀",
+    "desc": "다섯 가지 화석 단서를 찾아 떠나는 백악기 시간 여행.",
+    "series": "반짝반짝 과학 생활 그림책",
+    "no": 5,
+    "cover": "assets/cover-dinosaur.webp",
+    "alt": "루아와 공룡이 남긴 비밀",
+    "href": "books/korean-dinosaur-storybook.html",
+    "tags": [
+      "science"
+    ],
+    "info": "12장면",
+    "publishedAt": "2026-11-25"
+  },
+  {
+    "id": "electric-eel",
+    "title": "찌릿찌릿! 전기뱀장어의 비밀",
+    "desc": "아마존에서 찌릿이를 만나 전기를 만드는 몸과 신비한 능력을 알아보는 과학 탐험.",
+    "series": "반짝반짝 과학 그림책",
+    "no": 6,
+    "cover": "assets/cover-electric-eel.webp",
+    "alt": "아마존 강가의 꼬마 탐험가와 전기뱀장어",
+    "href": "books/korean-electric-eel-storybook.html",
+    "tags": [
+      "science"
+    ],
+    "info": "12장면",
+    "new": true,
+    "publishedAt": "2026-11-26"
+  }
 ]
