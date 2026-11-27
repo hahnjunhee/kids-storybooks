@@ -47,6 +47,7 @@ footer{text-align:center;padding:28px;color:#756a78;font-size:13px}
  .book p{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 4px}
  .badge{top:6px;left:6px;font-size:11px;padding:2px 8px}
 }
+.tools button{min-height:44px;border:1px solid #eadce9;border-radius:14px;background:white;color:inherit;font:inherit;padding:0 12px;cursor:pointer}.tools button[aria-pressed=true]{background:#77528a;color:white}.tools input{min-width:0}.filters{flex-wrap:wrap;overflow:visible}.book .date{font-size:12px;color:#6f5574}@media(max-width:540px){.books{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.book{display:block}.book img{height:auto;aspect-ratio:4/3}.book .content{padding:10px}.book h3{overflow-wrap:anywhere}.book p{display:none}.tools input{flex-basis:100%}}
 </style>
 </head>
 <body>
@@ -59,7 +60,7 @@ footer{text-align:center;padding:28px;color:#756a78;font-size:13px}
 <a class="resume" id="resume" hidden></a>
 <div class="tools">
 <input id="q" type="search" placeholder="제목·내용으로 찾기" aria-label="그림책 검색">
-<select id="sort" aria-label="정렬"><option value="new">최신순</option><option value="old">시리즈순</option></select>
+<select id="sort" aria-label="정렬"><option value="new">최신순</option><option value="name">제목순</option><option value="shuffle" hidden>셔플 중</option></select><button id="shuffle" type="button" aria-pressed="false">⇄ 셔플</button>
 </div>
 <div class="filters" id="filters" role="group" aria-label="주제별 동화"></div>
 <p class="count" id="count" aria-live="polite"></p>
@@ -74,20 +75,29 @@ const $=s=>document.querySelector(s);
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 let books=[],topic=location.hash.slice(1)||'all';
 if(!TOPICS.some(t=>t[0]===topic))topic='all';
-const read=()=>{try{return JSON.parse(ls.get('read')||'[]')}catch(e){return[]}};
+const key='library-v32';let saved={};try{saved=JSON.parse(sessionStorage.getItem(key)||'{}')||{}}catch(e){}
+const back=performance.getEntriesByType('navigation')[0]?.type==='back_forward';
+let order=Array.isArray(saved.order)?saved.order:[];
+if(back){$('#q').value=typeof saved.q==='string'?saved.q:'';if(TOPICS.some(t=>t[0]===saved.topic))topic=saved.topic;$('#sort').value=['new','name','shuffle'].includes(saved.sort)?saved.sort:'new'}
+function save(){try{sessionStorage.setItem(key,JSON.stringify({q:$('#q').value,topic,sort:$('#sort').value,order,y:scrollY}))}catch(e){}}
+function shuffle(){order=books.map(b=>b.id);for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}$('#sort').value='shuffle';render();save()}
+$('#shuffle').addEventListener('click',shuffle);
+addEventListener('pagehide',save);
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function filtersUI(){
  $('#filters').innerHTML=TOPICS.map(([k,l])=>{const n=k==='all'?books.length:books.filter(b=>b.tags.includes(k)).length;
   return `<button class="filter" data-f="${k}" aria-pressed="${k===topic}">${l} ${n}</button>`}).join('');
 }
 function render(){
- const q=$('#q').value.trim().toLowerCase(),done=read();
- let list=books.filter(b=>(topic==='all'||b.tags.includes(topic))&&(!q||(b.title+b.desc+b.series).toLowerCase().includes(q)));
- list.sort((a,b)=>$('#sort').value==='new'?b.no-a.no:a.no-b.no);
+ const q=$('#q').value.trim().toLowerCase();
+ let list=books.filter(b=>(topic==='all'||b.tags.includes(topic))&&(!q||([b.title,b.desc,b.series,...b.tags,...TOPICS.filter(t=>b.tags.includes(t[0])).map(t=>t[1])].join(' ')).toLowerCase().includes(q)));
+ const mode=$('#sort').value;$('#shuffle').setAttribute('aria-pressed',String(mode==='shuffle'));
+ const rank=new Map(order.map((id,i)=>[id,i]));
+ list.sort((a,b)=>mode==='name'?a.title.localeCompare(b.title,'ko'):mode==='shuffle'?(rank.get(a.id)??Infinity)-(rank.get(b.id)??Infinity)||b.no-a.no:(b.publishedAt||'').localeCompare(a.publishedAt||'')||b.no-a.no);
  $('#books').innerHTML=list.map(b=>`<a class="book" href="${b.href}" data-id="${b.id}">
-  ${done.includes(b.id)?'<span class="badge done">읽음</span>':b.new?'<span class="badge">NEW</span>':''}
+  
   <img src="${b.cover}" alt="${esc(b.alt)}" width="800" height="500" loading="lazy">
-  <div class="content"><div class="meta">${esc(b.series)} · ${b.no}권</div><h3>${esc(b.title)}</h3><p>${esc(b.desc)}</p><div class="meta">${esc(b.info)}</div></div></a>`).join('');
+  <div class="content"><div class="meta">${esc(b.series)} · ${b.no}권</div><h3>${esc(b.title)}</h3>${b.publishedAt?`<div class="date">${esc(b.publishedAt.replace(/-/g,'.'))}</div>`:''}<p>${esc(b.desc)}</p><div class="meta">${esc(b.info)}</div></div></a>`).join('');
  $('#empty').hidden=list.length>0;
  $('#count').textContent=`그림책 ${list.length}권`;
 }
@@ -95,16 +105,16 @@ function resume(){
  const b=books.find(x=>x.id===ls.get('last')),el=$('#resume');
  if(!b){el.hidden=true;return}
  el.href=b.href;el.dataset.id=b.id;el.hidden=false;
- el.innerHTML=`<img src="${b.cover}" alt=""><span><small>이어 읽기</small><b>${esc(b.title)}</b></span>`;
+ el.innerHTML=`<img src="${b.cover}" alt=""><span><small>최근 열어본 책</small><b>${esc(b.title)}</b></span>`;
 }
 document.addEventListener('click',e=>{
  const f=e.target.closest('.filter');
- if(f){topic=f.dataset.f;history.replaceState(null,'',topic==='all'?location.pathname:'#'+topic);filtersUI();render();return}
+ if(f){topic=f.dataset.f;history.replaceState(null,'',topic==='all'?location.pathname:'#'+topic);filtersUI();render();save();return}
  const a=e.target.closest('[data-id]');
- if(a){ls.set('last',a.dataset.id);const d=read();if(!d.includes(a.dataset.id)){d.push(a.dataset.id);ls.set('read',JSON.stringify(d))}}
+ if(a){ls.set('last',a.dataset.id);save()}
 });
-$('#q').addEventListener('input',render);$('#sort').addEventListener('change',render);
-fetch('books.json').then(r=>r.json()).then(d=>{books=d;filtersUI();render();resume()})
+$('#q').addEventListener('input',()=>{render();save()});$('#sort').addEventListener('change',()=>{render();save()});addEventListener('pageshow',e=>{if(e.persisted)resume()});
+fetch('books.json').then(r=>r.json()).then(d=>{books=d;filtersUI();render();resume();if(back&&Number.isFinite(saved.y))requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo(0,saved.y)))})
  .catch(()=>{$('#empty').hidden=false;$('#empty').textContent='책 목록을 불러오지 못했어요. 새로고침 해주세요.'});
 </script>
 </body>
