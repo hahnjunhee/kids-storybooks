@@ -92,5 +92,21 @@
     "info": "12장면",
     "new": true,
     "publishedAt": "2026-11-26"
+  },
+  {
+    "id": "blood-friends",
+    "title": "혈액 속 친구들과의 하루",
+    "desc": "적혈구 택배 아저씨와 백혈구 기사, 혈소판 구조대와 함께 혈액의 역할을 알아보는 이야기.",
+    "series": "반짝반짝 과학 생활 그림책",
+    "no": 7,
+    "cover": "assets/cover-blood-friends.webp",
+    "alt": "혈액 속 친구들의 마을",
+    "href": "books/blood-friends-v2.0.html",
+    "tags": [
+      "science"
+    ],
+    "info": "12장면",
+    "new": true,
+    "publishedAt": "2026-11-28"
   }
 ]
