@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>그림책 열람 템플릿</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#faf7ef;color:#292722;font:18px/1.7 system-ui,sans-serif}header{position:sticky;top:0;z-index:2;background:#faf7ef;border-bottom:1px solid #ccc;padding:8px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}button{font:inherit;padding:6px 12px;border:1px solid #777;border-radius:8px;background:white;color:#292722}button[aria-pressed=true]{background:#344c43;color:white}button:disabled{opacity:.45}main{max-width:760px;margin:auto;padding:12px}section{scroll-margin-top:100px;margin-bottom:32px}img{width:100%;height:auto;display:block;border-radius:10px}h1,h2{line-height:1.35}nav{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;max-width:760px;margin:auto} [hidden]{display:none!important} .paged section{margin-bottom:0} @media print{header,nav{display:none!important}main section[hidden]{display:block!important}section{break-inside:avoid}body{background:white}}
+</style></head><body>
+<header aria-label="열람 방식"><button id="scroll" aria-pressed="true">세로 스크롤</button><button id="page" aria-pressed="false">페이지 넘기기</button></header>
+<main id="book"><!-- 제작 시 아래 예시 장면을 확정 본문 및 내장 WebP로 교체 -->
+<section id="scene-00"><h1>그림책 열람 템플릿</h1><p>표지 예시</p></section>
+<section id="scene-01"><h2>첫 번째 장면</h2><p>본문 예시입니다.</p></section>
+<section id="scene-02"><h2>두 번째 장면</h2><p>발견 노트 예시입니다.</p></section></main>
+<nav id="nav" hidden aria-label="페이지 이동"><button id="prev">이전</button><span id="count" aria-live="polite"></span><button id="next">다음</button></nav>
+<script>
+(()=>{const book=document.getElementById('book'),scenes=[...book.querySelectorAll(':scope > section')],scroll=document.getElementById('scroll'),page=document.getElementById('page'),nav=document.getElementById('nav'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');let mode='scroll',index=0,start=null;
+function visible(){const y=document.querySelector('header').getBoundingClientRect().bottom+12;let n=0;scenes.forEach((s,i)=>{if(s.getBoundingClientRect().top<=y)n=i});return n}
+function render(){const paged=mode==='page';book.classList.toggle('paged',paged);scenes.forEach((s,i)=>s.hidden=paged&&i!==index);scroll.setAttribute('aria-pressed',String(!paged));page.setAttribute('aria-pressed',String(paged));nav.hidden=!paged;prev.disabled=index===0;next.disabled=index===scenes.length-1;count.textContent=(index+1)+' / '+scenes.length}
+function switchMode(m){if(m===mode)return;if(mode==='scroll')index=visible();mode=m;render();requestAnimationFrame(()=>scenes[index].scrollIntoView({block:'start'}))}
+function move(d){if(mode!=='page')return;const n=Math.max(0,Math.min(scenes.length-1,index+d));if(n===index)return;index=n;render();scenes[index].scrollIntoView({block:'start'})}
+scroll.onclick=()=>switchMode('scroll');page.onclick=()=>switchMode('page');prev.onclick=()=>move(-1);next.onclick=()=>move(1);
+book.addEventListener('touchstart',e=>{if(e.touches.length===1)start=[e.touches[0].clientX,e.touches[0].clientY];else start=null},{passive:true});book.addEventListener('touchcancel',()=>start=null);book.addEventListener('touchend',e=>{if(!start)return;const t=e.changedTouches[0],dx=t.clientX-start[0],dy=t.clientY-start[1];start=null;if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.5)move(dx<0?1:-1)},{passive:true});
+document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(mode==='page'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();move(e.key==='ArrowRight'?1:-1)}});render()})();
+</script></body></html>
