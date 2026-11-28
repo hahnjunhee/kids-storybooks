@@ -15,6 +15,7 @@
   새로 만들기: python tools/narration/make_adapter.py --html books/<slug>.html --book-id <slug> --out tools/narration/adapters/<slug>.json
   다시 만들기: 같은 명령에 --update
   규약과 다른 책(기존 작품): --cover-heading h2 --paragraphs ".lead,.prose p" 처럼 선택자를 지정한다(학습 카드 aside 등 지정하지 않은 요소는 낭독하지 않는다).
+  표지에 이야기가 있으면 --cover-paragraphs, 낭독하지 않는 마무리 블록(예: class="closing")은 --exclude-class closing.
 """
 import argparse
 import json
@@ -27,23 +28,24 @@ import common  # noqa: E402
 
 SCOPE = "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(section.activity), 푸터."
 FLAG_RE = re.compile(r"[0-9A-Za-z]")
-KNOWN = {"book_id", "html", "audio_dir", "audio_url_prefix", "container", "sections", "scope", "pronunciation", "pronunciation_review", "size_exception", "scenes"}
+KNOWN = {"book_id", "html", "audio_dir", "audio_url_prefix", "container", "sections", "scope", "pronunciation", "pronunciation_review", "size_exception", "exclude_classes", "scenes"}
 
 
 def scope_text(a):
     """낭독 범위 문구: 템플릿 기본 선택자면 표준 문구, 아니면 실제 선택자를 적는다."""
-    if (a.cover_heading, a.heading, a.paragraphs, a.cover_paragraphs) == ("h1", "h2", ".story p", ""):
+    if (a.cover_heading, a.heading, a.paragraphs, a.cover_paragraphs) == ("h1", "h2", ".story p", "") and not a.exclude_class:
         return SCOPE
     cover = f"표지 {a.cover_heading}" + (f" + {a.cover_paragraphs}" if a.cover_paragraphs else "")
-    return (f"제목({cover}, 장 {a.heading})과 본문 {a.paragraphs}. 제외: 표지 소개 문단, 쪽 번호, "
-            "지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity 등), 푸터.")
+    cover_note = "" if a.cover_paragraphs else "표지 소개 문단, "
+    return (f"제목({cover}, 장 {a.heading})과 본문 {a.paragraphs}. 제외: {cover_note}쪽 번호, "
+            "지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity" + "".join(f", section.{c}" for c in a.exclude_class) + " 등), 푸터.")
 
 
 def unit_hash(text):
     return common.sha256_hex(text)[:12]
 
 
-def classify(soup):
+def classify(soup, exclude_classes=()):
     """main 직계 자식을 장면/제외/오류로 나눈다. 조용히 누락되는 요소가 없게 한다."""
     main = soup.select_one("main")
     if main is None:
@@ -55,7 +57,7 @@ def classify(soup):
         if c.name == "section":
             if cid and re.fullmatch(r"scene\d+", cid):
                 scenes.append(c)
-            elif "activity" in cls:
+            elif "activity" in cls or any(x in cls for x in exclude_classes):
                 excluded.append(label)
             else:
                 errors.append(f"규약 밖 section {label}: 장면이면 id를 scene<번호>로, 낭독하지 않는 블록이면 class=\"activity\"로 표시")
@@ -77,7 +79,8 @@ def main():
     ap.add_argument("--cover-heading", default="h1", help="표지(scene0) 제목 선택자(템플릿 규약은 h1)")
     ap.add_argument("--heading", default="h2", help="장 제목 선택자(템플릿 규약은 h2)")
     ap.add_argument("--paragraphs", default=".story p", help="장 본문 선택자(쉼표로 여러 개, 문서 순서가 아니라 나열한 순서로 읽음). 템플릿 규약은 '.story p'")
-    ap.add_argument("--cover-paragraphs", default="", help="표지에서 낭독할 문단 선택자(기본은 없음: 표지 소개는 낭독하지 않음)")
+    ap.add_argument("--cover-paragraphs", default="", help="표지에서 낭독할 문단 선택자(기본은 없음: 표지 소개는 낭독하지 않음). 표지에 실제 이야기가 있는 책은 지정한다")
+    ap.add_argument("--exclude-class", action="append", default=[], help="낭독하지 않는 main 직계 section의 class(여러 번 지정 가능, activity는 항상 제외). 예: closing")
     a = ap.parse_args()
     if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", a.book_id):
         raise SystemExit("book-id는 영문 소문자·숫자·하이픈 slug여야 함(이름 없는 파일명 정책)")
@@ -89,7 +92,7 @@ def main():
         if old.get("book_id") != a.book_id:
             raise SystemExit(f"book-id가 다름: 기존 {old.get('book_id')} / 지정 {a.book_id}")
     soup = common.parse_book(a.html)
-    scene_secs, excluded, errors, warns = classify(soup)
+    scene_secs, excluded, errors, warns = classify(soup, a.exclude_class)
     if not scene_secs and not errors:
         raise SystemExit("main > section#sceneN 장면이 없음")
     ids = [s["id"] for s in scene_secs]
@@ -140,6 +143,8 @@ def main():
             print(f"경고: 사용되지 않는 발음 치환(본문에 없음): {src}")
 
     ad = dict(old or {})
+    if a.exclude_class:
+        ad["exclude_classes"] = list(a.exclude_class)
     ad.update({"book_id": a.book_id, "html": a.html, "audio_dir": "audio/" + a.book_id, "audio_url_prefix": "../audio/" + a.book_id + "/",
                "container": "main", "sections": "main > section", "scope": scope_text(a), "pronunciation": pron, "pronunciation_review": review, "scenes": scenes})
     json.dump(ad, open(a.out, "w", encoding="utf8"), ensure_ascii=False, indent=1)

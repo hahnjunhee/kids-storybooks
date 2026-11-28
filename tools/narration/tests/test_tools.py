@@ -148,6 +148,18 @@ class MakeAdapter(unittest.TestCase):
         r2 = run([MAKE, "--html", self.html, "--book-id", "tbook", "--out", self.out + "2"])
         self.assertNotEqual(r2.returncode, 0)
 
+    def test_exclude_class_and_cover_paragraphs(self):
+        closing = NOTES + '<section class="closing"><h2>마무리 질문</h2><p>함께 이야기해요.</p></section>'
+        self.book(extra=closing)
+        r = self.make()  # 옵션 없이는 closing이 규약 밖 section 오류
+        self.assertNotEqual(r.returncode, 0)
+        r = self.make("--exclude-class", "closing", "--cover-paragraphs", ".story p")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        ad = self.load()
+        self.assertEqual(ad["exclude_classes"], ["closing"])
+        self.assertEqual(ad["scenes"][0]["paragraphs"], [".story p"])  # 표지 본문도 낭독
+        self.assertIn("section.closing", ad["scope"])
+
     def test_book_id_must_be_slug_and_match_on_update(self):
         self.book()
         r = run([MAKE, "--html", self.html, "--book-id", "Bad_ID", "--out", self.out])
