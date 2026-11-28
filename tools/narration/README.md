@@ -59,5 +59,5 @@ bash tools/narration/tests/run-tests.sh origin/main
 | 책 | 상태 | 비고 |
 |---|---|---|
 | electric-eel | 낭독 완료(`approved`) | 2026-11-28 사용자 전 장면 청취 승인 |
-| sea-otter | 낭독 시범(`pilot_unlistened`) | 어댑터 `--cover-heading h2 --paragraphs ".lead,.prose p"`. 과학 돋보기(aside)·탐구 노트(section.activity)는 낭독 제외. 청취 승인 대기 |
+| sea-otter | 낭독 완료(`approved`) | 2026-11-28 사용자 승인(전 장면 청취 여부·기기는 기록 없음, `docs/reviews/narration-sea-otter-2026-11-28.md`). 어댑터 `--cover-heading h2 --paragraphs ".lead,.prose p"`. 과학 돋보기(aside)·탐구 노트(section.activity)는 낭독 제외 |
 | lulu-friends, yeongheung, craft-museum, dinosaur, blood-friends, lua-pink-bicycle | 미적용 | 구조 조사 `STRUCTURE_SURVEY.md`. 한 권씩 어댑터 작성 → 합성 → 검증 → 공개 → 사용자 청취 승인 |
