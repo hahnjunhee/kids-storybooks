@@ -1,0 +1,248 @@
+{
+ "schema_version": 1,
+ "player_version": "1.2.1",
+ "book_id": "lulu-friends",
+ "scope": "제목(표지 h2 + .prose p, 장 h2)과 본문 .prose p. 제외: 쪽 번호, 지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity, section.closing 등), 푸터.",
+ "engine": "MeloTTS",
+ "engine_commit": "2091453",
+ "model_version": "myshell-ai/MeloTTS-Korean@0207e5adfc90129a51b6b03d89be6d84360ed323",
+ "bert_version": "kykim/bert-kor-base@1779cc0982ada0216dd6de0dd4e86fb78201926d",
+ "runtime": {
+  "torch": "2.14.1+cu130",
+  "transformers": "4.27.4"
+ },
+ "speaker": "KR",
+ "settings": {
+  "speed": 1.0,
+  "sdp_ratio": 0.2,
+  "noise_scale": 0.6,
+  "noise_scale_w": 0.8
+ },
+ "postprocess": "A-raw-concat-1",
+ "mp3": {
+  "codec": "libmp3lame",
+  "bitrate": "64k",
+  "channels": 1,
+  "sample_rate": 44100
+ },
+ "pronunciation": [],
+ "review_status": "pilot_unlistened",
+ "scenes": [
+  {
+   "scene_id": "scene0",
+   "selector": "#scene0",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s00.mp3",
+   "audio_file": "s00.mp3",
+   "duration": 46.315,
+   "paragraph_start_seconds": [
+    0.0,
+    2.546
+   ],
+   "text_hash": "da4662537902108308815dbf4b1fba938369c6ed71785363a2072fb0bc9e3286",
+   "synthesis_hash": "b7e8763fbbe62fd78f17c7c5b4e17d1cdbcea41936c5894b3efa7b844a391ef1",
+   "audio_hash": "68cd20762d41418f79992c2c8f8cf761ee57248d332d1efd2edeb90984d26bc5"
+  },
+  {
+   "scene_id": "scene1",
+   "selector": "#scene1",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s01.mp3",
+   "audio_file": "s01.mp3",
+   "duration": 48.744,
+   "paragraph_start_seconds": [
+    0.0,
+    2.732
+   ],
+   "text_hash": "88253ff9a02f7fd10ea14ecf02fdef76e59d9958e845f0d2913a978dd3908f08",
+   "synthesis_hash": "13a9ea61be71b5e5e27a1277c014662316d4f11921c2c0d08376da59b242fad0",
+   "audio_hash": "4c119abce198e1e0dcf9fa375b887187895cf90673d56ac4ec838cd28c20908f"
+  },
+  {
+   "scene_id": "scene2",
+   "selector": "#scene2",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s02.mp3",
+   "audio_file": "s02.mp3",
+   "duration": 60.761,
+   "paragraph_start_seconds": [
+    0.0,
+    4.288
+   ],
+   "text_hash": "ce8dab91296b1036cb58014048d1ec0bf71bc5f970487127a9c8c7b2889b460c",
+   "synthesis_hash": "035536f09696abb7acc7b346c26bd03a7860a2c2302f21eccf458343947dd963",
+   "audio_hash": "60523b5d2976cb2e33c56b30890a0bfc51f01424ceb5969a6e9f7169d921e270"
+  },
+  {
+   "scene_id": "scene3",
+   "selector": "#scene3",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s03.mp3",
+   "audio_file": "s03.mp3",
+   "duration": 51.148,
+   "paragraph_start_seconds": [
+    0.0,
+    2.732
+   ],
+   "text_hash": "41e348fd4e49476a58e8b495f5057e178d2f9c2422079599c3a3aab4884bdcb2",
+   "synthesis_hash": "f5320d5802e52a76872c210702fd0715dedccf378a6927883862445060426b56",
+   "audio_hash": "932a2dec2097fef815d9ee5afc2d79adddfe55822bf24d7e5b8154a0210f19a3"
+  },
+  {
+   "scene_id": "scene4",
+   "selector": "#scene4",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s04.mp3",
+   "audio_file": "s04.mp3",
+   "duration": 49.215,
+   "paragraph_start_seconds": [
+    0.0,
+    2.674
+   ],
+   "text_hash": "9ecb17a3d348827ced6011691106b0dd27cb081f47e80bfc2926ccfbc340f878",
+   "synthesis_hash": "8a1bb5a21938e808900c4c1fadd875c8092d8a8bfe063153ab4eb5f8754f8fe1",
+   "audio_hash": "047fe985d667a3a1f7d20c4eb11e4dbc9d9e96725b71fc1e875e84074358bb22"
+  },
+  {
+   "scene_id": "scene5",
+   "selector": "#scene5",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s05.mp3",
+   "audio_file": "s05.mp3",
+   "duration": 53.656,
+   "paragraph_start_seconds": [
+    0.0,
+    2.616
+   ],
+   "text_hash": "8fe587a00dd15cf8a9fded0712c8eb170cfb20f42b671b8953261cebf37572a2",
+   "synthesis_hash": "c07695c9e6038850cebc5619f3fb9f9f1cdaa7684b36aab38389610d363aecfe",
+   "audio_hash": "64db0b68a8273770891fc3d6d9183647f53f26f158c60206e8fb46ea3df35ddc"
+  },
+  {
+   "scene_id": "scene6",
+   "selector": "#scene6",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s06.mp3",
+   "audio_file": "s06.mp3",
+   "duration": 53.917,
+   "paragraph_start_seconds": [
+    0.0,
+    2.511
+   ],
+   "text_hash": "aabad3ec20a663d7d140e624ac0d190b6c3fb3b10d0fc72d31e81a21b5e2ad5e",
+   "synthesis_hash": "73de981e57e21eda787692861210d696fcdb7912114c8116358df13c9f748137",
+   "audio_hash": "5bcef26ae022543d5f5ad852a206aa821d021406e9c04eb4c4117f499f49eded"
+  },
+  {
+   "scene_id": "scene7",
+   "selector": "#scene7",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s07.mp3",
+   "audio_file": "s07.mp3",
+   "duration": 55.589,
+   "paragraph_start_seconds": [
+    0.0,
+    2.767
+   ],
+   "text_hash": "23cb4249eb4932c8473f6337696f7485d82dc167be07843ce8342a3c19fb682d",
+   "synthesis_hash": "830b4b4409f43a34de56815119d23c923762dbb80439968fc147ae44d7f9ad90",
+   "audio_hash": "81380ac8459c3720ebbdc6e8b55315f7b7352774ddd7c0b0d25127dec0e644de"
+  },
+  {
+   "scene_id": "scene8",
+   "selector": "#scene8",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s08.mp3",
+   "audio_file": "s08.mp3",
+   "duration": 53.447,
+   "paragraph_start_seconds": [
+    0.0,
+    2.825
+   ],
+   "text_hash": "d9ab61c21359a3b2459fb2b8f7981cd923df688b5e0464ed0419f3aeb81637e0",
+   "synthesis_hash": "60df09479147e425a5f2b66c89594685eb1fcc07de52a14201f18781a1dab442",
+   "audio_hash": "d9cf408d295f61c44ba5971b668534ab7c871f006d2409055db038d501057068"
+  },
+  {
+   "scene_id": "scene9",
+   "selector": "#scene9",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s09.mp3",
+   "audio_file": "s09.mp3",
+   "duration": 56.633,
+   "paragraph_start_seconds": [
+    0.0,
+    2.755
+   ],
+   "text_hash": "3672dd3b586aa54a0e44d73f8847eba1def4405bc1db7a62aa12d80f3886a5e0",
+   "synthesis_hash": "5942db3f9fc1a6ec811e1fccef787c7da67bb0c8919e18b4ce19abada59a9ea8",
+   "audio_hash": "3e1ce9d7db3b250a7e54f119c70d29793d7a1ac4f01447fda0834c3b007a36a2"
+  },
+  {
+   "scene_id": "scene10",
+   "selector": "#scene10",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s10.mp3",
+   "audio_file": "s10.mp3",
+   "duration": 64.549,
+   "paragraph_start_seconds": [
+    0.0,
+    3.022
+   ],
+   "text_hash": "17f52eaf3762b549b6105243094f751012d179096aba159c396309b7858d0ea5",
+   "synthesis_hash": "8d44b0a2771e8076ff86596483e8fcf8ad65e96571343b02b1f131f0cc7b89a2",
+   "audio_hash": "0cea34cb65e23685a8727c2fca5091f41ee3d6c11ccc4e909afc3607a5cf30f0"
+  },
+  {
+   "scene_id": "scene11",
+   "selector": "#scene11",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".prose p"
+   ],
+   "audio_url": "../audio/lulu-friends/s11.mp3",
+   "audio_file": "s11.mp3",
+   "duration": 65.515,
+   "paragraph_start_seconds": [
+    0.0,
+    2.453
+   ],
+   "text_hash": "5b1f7312d0dcb45d94bf5877bea2ad6e19a77a8c0fc10fb903f1896e3c347d31",
+   "synthesis_hash": "14c83a3cf8d16897c4b62ec6f39ce9123a8e42793429827209e989c0c67c3951",
+   "audio_hash": "6c536bfba008492e5d0e24baee9c3d04d94ff772ee51c4d7c395116e5a57b628"
+  }
+ ]
+}
