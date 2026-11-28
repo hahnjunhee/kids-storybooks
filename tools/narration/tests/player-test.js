@@ -336,7 +336,7 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
     rec('K 불일치 경고가 콘솔에 남음', o1.warns.some((w) => /건너뜀/.test(w)), o1.warns.join(' | ').slice(0, 120));
     await seekEnd(o1.page, 0.3);
     await o1.ctx.close();
-    const o2 = await open(browser, mod((b) => b.replace('"player_version":"1.0.0"', '"player_version":"9.9.9"')));
+    const o2 = await open(browser, mod((b) => b.replace(/"player_version":"[0-9.]+"/, '"player_version":"9.9.9"')));
     await sleep(500);
     rec('K 플레이어·manifest 버전 불일치 시 낭독 UI를 만들지 않음(읽기는 정상)', (await o2.page.$('.nar-bar')) === null && (await o2.page.evaluate(() => document.querySelectorAll('main > section').length)) === 14);
     await o2.ctx.close();
@@ -355,6 +355,44 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
     await page.keyboard.press('Tab'); const tag = await page.evaluate(() => document.activeElement && document.activeElement.tagName);
     rec('L 키보드 Tab으로 컨트롤에 포커스 이동', ['BUTTON', 'SELECT', 'A'].includes(tag), tag);
     rec('L 콘솔 오류 없음', errs.length === 0, errs.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  // M. 템플릿(음성 없이 읽기 방식만): 낭독 UI는 숨기고 세로/페이지 전환·페이지 이동만 제공
+  await guard('M 템플릿 읽기 방식', async () => {
+    const T = BASE + '/templates/storybook.html';
+    for (const w of [320, 480]) {
+      const { ctx, page, errs } = await open(browser, { width: w, url: T });
+      await page.waitForSelector('.nar-bar');
+      const m = await page.evaluate(() => {
+        const vis = (s) => { const e = document.querySelector(s); return !!e && getComputedStyle(e).display !== 'none'; };
+        const els = [...document.querySelectorAll('.nar-modes button')];
+        const r = els.map((e) => e.getBoundingClientRect());
+        return { play: vis('.nar-play'), ai: vis('.nar-ai'), panel: vis('.nar-panel'), modes: vis('.nar-modes'), n: els.length, minW: Math.round(Math.min(...r.map((x) => x.width))), minH: Math.round(Math.min(...r.map((x) => x.height))), sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, narr: document.querySelector('.nar-bar').dataset.narration };
+      });
+      rec(`M${w} 낭독 컨트롤(듣기·AI 음성·패널)은 숨김, 읽기 방식 버튼만 표시`, !m.play && !m.ai && !m.panel && m.modes && m.n === 2 && m.narr === 'off', JSON.stringify(m));
+      rec(`M${w} 터치 영역 44px 이상·가로 스크롤 없음`, m.minW >= 44 && m.minH >= 44 && m.sw <= m.cw, `최소 ${m.minW}x${m.minH}, ${m.sw}/${m.cw}`);
+      await page.click('.nar-modes [data-mode=page]'); await sleep(400);
+      let vis = await visibleSections(page);
+      rec(`M${w} 페이지 모드: 첫 쪽만 표시, "1 / 4"`, vis.filter(Boolean).length === 1 && vis[0] === true && (await page.textContent('.nar-count')) === '1 / 4', vis.map((v) => (v ? 1 : 0)).join(''));
+      await click(page, '.nar-pager [data-p="1"]'); await page.keyboard.press('ArrowRight'); await sleep(300);
+      vis = await visibleSections(page);
+      rec(`M${w} 다음 페이지 버튼·방향키로 3번째 쪽("3 / 4")`, vis[2] === true && vis.filter(Boolean).length === 1 && (await page.textContent('.nar-count')) === '3 / 4');
+      await swipe(page, 60, 300, 300, 300); await sleep(300);
+      rec(`M${w} 오른쪽 스와이프로 이전 쪽("2 / 4")`, (await page.textContent('.nar-count')) === '2 / 4');
+      await page.click('.nar-modes [data-mode=scroll]'); await sleep(900);
+      const al = await page.evaluate(() => { const b = document.querySelector('.nar-bar').getBoundingClientRect().bottom; return Math.round(Math.abs(document.getElementById('scene1').getBoundingClientRect().top - b)); });
+      rec(`M${w} 세로로 돌아오면 보던 장면(1장)에 위치`, al < 40, `차이 ${al}px`);
+      rec(`M${w} 콘솔 오류 없음`, errs.length === 0, errs.join(' | ').slice(0, 200));
+      await ctx.close();
+    }
+    const { ctx, page } = await open(browser, { width: 900, height: 900, url: T });
+    await page.waitForSelector('.nar-bar'); await page.click('.nar-modes [data-mode=page]'); await page.emulateMedia({ media: 'print' });
+    const pr = await page.evaluate(() => ({ bar: getComputedStyle(document.querySelector('.nar-bar')).display, secs: [...document.querySelectorAll('main > section')].map((s) => getComputedStyle(s).display !== 'none') }));
+    rec('M 템플릿 인쇄: 상단바 숨김, 모든 장면(4개 섹션) 표시', pr.bar === 'none' && pr.secs.length === 4 && pr.secs.every(Boolean));
+    await page.emulateMedia({ media: 'screen' });
+    const f = await page.evaluate(() => { document.getElementById('larger').click(); return getComputedStyle(document.documentElement).getPropertyValue('--scale'); });
+    rec('M 템플릿 글자 크기 + 버튼 동작', f === '1.10', f);
     await ctx.close();
   });
 

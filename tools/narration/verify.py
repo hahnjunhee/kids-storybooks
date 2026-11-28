@@ -4,7 +4,9 @@
 HTML 내 manifest와 사이드카 manifest 일치, 상대 URL·캐시 무효화 쿼리, MP3 디코딩·길이·형식·무음·피크, 검수 상태 게이트.
 자동 검증은 사람이 들은 검수가 아니다. 청취는 review_status로 구분한다(unreviewed / pilot_unlistened / approved).
 
-사용(저장소 루트): python tools/narration/verify.py --adapter tools/narration/adapters/electric-eel.json --baseline origin/main --allow-pilot
+사용(저장소 루트):
+  낭독 포함 책: python tools/narration/verify.py --adapter tools/narration/adapters/electric-eel.json --baseline origin/main --allow-pilot
+  읽기 방식만(템플릿): python tools/narration/verify.py --modes-only templates/storybook.html
 """
 import argparse
 import json
@@ -15,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common  # noqa: E402
-from build import BLOCK_RE, HASH_LEN, strip_blocks  # noqa: E402
+from build import BLOCK_RE, HASH_LEN, minify_css, minify_js, strip_blocks  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 
 RESULTS = []
@@ -30,12 +32,39 @@ def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
+def verify_modes_only(path):
+    """읽기 방식만 삽입한 파일(템플릿 등) 검사: 블록 구성, manifest, 삽입된 플레이어가 현재 소스와 같은지."""
+    html = open(path, encoding="utf8").read()
+    check("삽입 블록은 스타일 1 + 본문 1", len(BLOCK_RE.findall(html)) == 2)
+    check("중복 삽입 없음", html.count('id="narration-manifest"') == 1 and html.count("<!--narration:begin-->") == 1)
+    m = re.search(r'<script type="application/json" id="narration-manifest">(.*?)</script>', html, re.S)
+    man = json.loads(m.group(1).replace("<\\/", "</")) if m else None
+    check("manifest 존재", man is not None)
+    if man is None:
+        sys.exit(1)
+    check("player_version 일치", man["player_version"] == common.PLAYER_VERSION, man["player_version"])
+    check("낭독 장면 없음(읽기 방식만)", man["scenes"] == [])
+    check("container·sections 지정", bool(man.get("container")) and bool(man.get("sections")))
+    check("삽입된 스크립트가 현재 player.js와 동일", ("<script>" + minify_js() + "</script>") in html)
+    check("삽입된 스타일이 현재 player.css와 동일", ("<style>" + minify_css() + "</style>") in html)
+    soup = BeautifulSoup(strip_blocks(html), "html.parser")
+    check("장면 섹션 존재(main > section)", len(soup.select(man["sections"])) > 0)
+    fails = [r for r in RESULTS if not r[1]]
+    print(f"\n검사 {len(RESULTS)}개, 실패 {len(fails)}개")
+    sys.exit(1 if fails else 0)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--adapter", required=True)
-    ap.add_argument("--baseline", required=True, help="원본 HTML을 읽을 git 참조(예: origin/main)")
+    ap.add_argument("--adapter")
+    ap.add_argument("--baseline", help="원본 HTML을 읽을 git 참조(예: origin/main)")
     ap.add_argument("--allow-pilot", action="store_true", help="pilot_unlistened 상태의 시범 배포 허용")
+    ap.add_argument("--modes-only", metavar="HTML", help="읽기 방식만 삽입한 파일 검사(예: templates/storybook.html)")
     a = ap.parse_args()
+    if a.modes_only:
+        verify_modes_only(a.modes_only)
+    if not a.adapter or not a.baseline:
+        raise SystemExit("--adapter와 --baseline이 필요함(또는 --modes-only <HTML>)")
     ad = common.load_adapter(a.adapter)
     html = open(ad["html"], encoding="utf8").read()
     side = json.load(open(os.path.join(ad["audio_dir"], "manifest.json"), encoding="utf8"))

@@ -12,8 +12,9 @@
 - `adapters/<book>.json`: 책별 어댑터. 장면 선택자, 제목·문단 선택자, 발음 치환, 오디오 위치. 낭독 범위는 `scope` 필드에 적는다.
 - `common.py`: 본문 추출·정규화·해시 규칙(브라우저와 같은 규칙).
 - `synth.py`: 장면별 합성(MeloTTS). 저장소 밖 클라우드 세션에서만 실행하고 결과 MP3와 `manifest.json`만 커밋한다. 변경된 장면만 다시 합성한다.
-- `build.py`: 플레이어를 책 HTML에 삽입한다. 추가 전용이며 다시 실행해도 중복되지 않는다.
-- `verify.py`: 배포 전 자동 검증 게이트(실패 시 종료 코드 1).
+- `make_adapter.py`: 공통 열람 템플릿 규약을 따르는 신규 작품에서 어댑터를 자동 생성한다(규약 위반은 오류, 숫자·영문 본문은 발음 확인 경고).
+- `build.py`: 플레이어를 책 HTML에 삽입한다. 추가 전용이며 다시 실행해도 중복되지 않는다. `--modes-only`는 음성 없이 읽기 방식만 삽입한다(템플릿·음성 준비 전 책).
+- `verify.py`: 배포 전 자동 검증 게이트(실패 시 종료 코드 1). `--modes-only <HTML>`은 읽기 방식만 삽입한 파일(템플릿)의 삽입 상태를 검사한다.
 - `asr_check.py`: 보조 점검. 합성 음성을 음성 인식으로 받아 적어 원문과 비교한다. 사람의 청취를 대체하지 않는다.
 - `survey.py` → `STRUCTURE_SURVEY.md`: 전체 책 HTML 구조 전수 조사.
 - `tests/`: 브라우저 통합 시험(Playwright).
@@ -44,4 +45,11 @@ bash tools/narration/tests/run-tests.sh origin/main
 - 잠금화면에서의 연속 낭독과 Media Session은 구현하지 않았다(Phase 3).
 - 문단 강조는 구현하지 않았다. `paragraph_start_seconds`는 데이터만 기록한다(Phase 3).
 - 발견 노트·학습 카드 낭독은 구현하지 않았다(본문과 구분한 선택 낭독, 후속).
-- 템플릿(`templates/storybook.html`)은 수정하지 않았다(Phase 2).
+- 이미 있는 기존 책 7권에는 적용하지 않았다(시범 승인 후 한 권씩). 책마다 구조가 달라 어댑터를 손으로 작성해야 한다(`STRUCTURE_SURVEY.md`).
+
+## 신규 작품 절차 (템플릿 규약을 따르는 책)
+1. `templates/storybook.html`을 복사해 `books/<slug>.html`을 만들고 장면·본문·삽화를 채운다. 규약: `main > section#scene0, scene1, …`, 표지 `h1`, 나머지 `h2` + `.story p`, 발견 노트는 `section.activity`.
+2. 어댑터 생성: `python tools/narration/make_adapter.py --html books/<slug>.html --book-id <slug> --out tools/narration/adapters/<slug>.json` (경고가 나온 숫자·영문 문장은 어댑터의 `pronunciation`에 치환을 추가).
+3. 음성이 아직 없으면 `build.py --modes-only --html books/<slug>.html`로 읽기 방식만 삽입한다(템플릿에는 이미 들어 있음).
+4. 낭독 포함 출시: 위 "실행 순서"(합성 → 삽입 → 검증 → 브라우저 시험)를 따르고 전 장면을 들어 `review_status`를 `approved`로 올린다.
+5. 템플릿에는 플레이어가 삽입돼 있다. `player.js`를 고치면 `build.py --modes-only --html templates/storybook.html --book-id template`로 다시 삽입하고 `verify.py --modes-only templates/storybook.html`로 확인한다.

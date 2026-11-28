@@ -1,10 +1,10 @@
 /* 그림책 낭독 플레이어 + 읽기 방식(세로/페이지) — 공통 소스. 빌드(build.py)가 압축해 각 책 HTML에 인라인으로 넣는다.
  * 책 HTML은 본문·삽화를 바꾸지 않고, 이 스크립트가 상단바와 페이지 이동 UI를 런타임에 만든다.
- * 입력: <script type="application/json" id="narration-manifest"> (필드는 기획안 v1.1 §4).
+ * 입력: <script type="application/json" id="narration-manifest"> (필드는 기획안 v1.1 §4). scenes가 비어 있으면 읽기 방식(세로/페이지)만 제공한다.
  * 실패해도 기존 읽기는 그대로 동작해야 한다: 모든 저장소 접근은 try/catch, 오류는 UI 안내로 처리한다. */
 (function () {
   'use strict';
-  var VERSION = '1.0.0';
+  var VERSION = '1.1.0';
   if (window.__narrationLoaded) return;
   var mEl = document.getElementById('narration-manifest');
   if (!mEl) return;
@@ -33,6 +33,7 @@
   bar.className = 'nar-bar';
   bar.setAttribute('role', 'region');
   bar.setAttribute('aria-label', '낭독과 읽기 방식');
+  bar.setAttribute('data-narration', scenes.length ? 'on' : 'off'); // off: 음성이 없는 책·템플릿(읽기 방식만 제공)
   bar.innerHTML =
     '<div class="nar-row"><button type="button" class="nar-play" data-a="play">🔊 듣기</button>' +
     '<span class="nar-ai">AI 음성</span>' +
