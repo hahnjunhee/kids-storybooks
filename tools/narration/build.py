@@ -4,7 +4,9 @@
 기존 본문·삽화·스크립트는 바꾸지 않으며, 마커 사이를 지우면 원본 바이트와 같아진다(verify.py가 검사).
 다시 실행하면 기존 블록을 지우고 새로 넣는다(중복 삽입 방지). 플레이어 버전은 manifest의 player_version과 일치해야 동작한다.
 
-사용(저장소 루트): python tools/narration/build.py --adapter tools/narration/adapters/electric-eel.json --review-status pilot_unlistened
+사용(저장소 루트):
+  낭독 포함: python tools/narration/build.py --adapter tools/narration/adapters/electric-eel.json --review-status pilot_unlistened
+  읽기 방식만(템플릿·음성 준비 전): python tools/narration/build.py --modes-only --html templates/storybook.html --book-id template
 요건: beautifulsoup4(공용 모듈), Node/npx(terser로 player.js 압축)
 """
 import argparse
@@ -61,28 +63,14 @@ def embedded_manifest(side):
     return m
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--adapter", required=True)
-    ap.add_argument("--review-status", choices=REVIEW, default=None)
-    a = ap.parse_args()
-    ad = common.load_adapter(a.adapter)
-    side_path = os.path.join(ad["audio_dir"], "manifest.json")
-    side = json.load(open(side_path, encoding="utf8"))
-    if a.review_status:
-        side["review_status"] = a.review_status
-        json.dump(side, open(side_path, "w", encoding="utf8"), ensure_ascii=False, indent=1)
-    if side["player_version"] != common.PLAYER_VERSION:
-        side["player_version"] = common.PLAYER_VERSION
-        json.dump(side, open(side_path, "w", encoding="utf8"), ensure_ascii=False, indent=1)
-    man = embedded_manifest(side)
-    man["container"], man["sections"] = ad["container"], ad["sections"]
+def inject(html_path, man):
+    """manifest를 만들어 style/script 블록을 책 HTML에 넣는다(기존 블록은 먼저 지운다)."""
     mjson = json.dumps(man, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     js = minify_js()
     if "</script" in js.lower():
         raise SystemExit("압축된 스크립트에 </script 문자열이 있어 삽입할 수 없음")
     css = minify_css()
-    raw = open(ad["html"], encoding="utf8").read()
+    raw = open(html_path, encoding="utf8").read()
     base = strip_blocks(raw)
     if base.lower().count("</head>") != 1 or base.lower().count("</body>") != 1:
         raise SystemExit("</head> 또는 </body>가 정확히 1개가 아님: 이 책은 어댑터/삽입 규칙을 따로 확정해야 함")
@@ -91,11 +79,44 @@ def main():
     b = base.lower().rindex("</body>")
     block = BODY_BEGIN + '<script type="application/json" id="narration-manifest">' + mjson + "</script><script>" + js + "</script>" + BODY_END
     base = base[:b] + block + base[b:]
-    open(ad["html"], "w", encoding="utf8").write(base)
-    orig = len(strip_blocks(raw).encode("utf8")), len(raw.encode("utf8"))
-    print(f"삽입 완료: {ad['html']}")
-    print(f"  HTML 증가분: {len(base.encode('utf8')) - orig[0]}B (스타일 {len(css)}B, manifest {len(mjson.encode('utf8'))}B, 스크립트 {len(js.encode('utf8'))}B)")
-    print(f"  전체 크기: {orig[0]}B -> {len(base.encode('utf8'))}B")
+    open(html_path, "w", encoding="utf8").write(base)
+    orig = len(strip_blocks(raw).encode("utf8"))
+    print(f"삽입 완료: {html_path}")
+    print(f"  HTML 증가분: {len(base.encode('utf8')) - orig}B (스타일 {len(css)}B, manifest {len(mjson.encode('utf8'))}B, 스크립트 {len(js.encode('utf8'))}B)")
+    print(f"  전체 크기: {orig}B -> {len(base.encode('utf8'))}B")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--adapter", help="낭독 포함 빌드: 책 어댑터 JSON")
+    ap.add_argument("--review-status", choices=REVIEW, default=None)
+    ap.add_argument("--modes-only", action="store_true", help="음성 없이 읽기 방식(세로/페이지)만 삽입(템플릿·음성 준비 전 책)")
+    ap.add_argument("--html", help="--modes-only일 때 대상 HTML")
+    ap.add_argument("--book-id", default=None)
+    ap.add_argument("--container", default="main")
+    ap.add_argument("--sections", default="main > section")
+    a = ap.parse_args()
+    if a.modes_only:
+        if not a.html:
+            raise SystemExit("--modes-only에는 --html이 필요함")
+        man = {"schema_version": common.SCHEMA_VERSION, "player_version": common.PLAYER_VERSION,
+               "book_id": a.book_id or os.path.splitext(os.path.basename(a.html))[0], "review_status": "none",
+               "hash_len": HASH_LEN, "container": a.container, "sections": a.sections, "scenes": []}
+        inject(a.html, man)
+        return
+    if not a.adapter:
+        raise SystemExit("--adapter 또는 --modes-only가 필요함")
+    ad = common.load_adapter(a.adapter)
+    side_path = os.path.join(ad["audio_dir"], "manifest.json")
+    side = json.load(open(side_path, encoding="utf8"))
+    if a.review_status:
+        side["review_status"] = a.review_status
+    if side["player_version"] != common.PLAYER_VERSION:
+        side["player_version"] = common.PLAYER_VERSION
+    json.dump(side, open(side_path, "w", encoding="utf8"), ensure_ascii=False, indent=1)
+    man = embedded_manifest(side)
+    man["container"], man["sections"] = ad["container"], ad["sections"]
+    inject(ad["html"], man)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ GitHub Pages 기반 공개 정적 그림책 도서관입니다. 모바일에서 
 - `books/korean-electric-eel-storybook.html` — 《찌릿찌릿! 전기뱀장어의 비밀》 (v1.0.1)
 
 ## 제작·운영 기준
-- [그림책 제작 가이드라인 v3.1.2](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
+- [그림책 제작 가이드라인 v3.1.3](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 낭독(듣기), 압축, 품질 검증, 게시
 - [이미지 스타일 가이드 v2.4](docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md) — 삽화 유형·품질 기준
 - [도서관 운영 가이드](docs/BOOK_LIBRARY_OPERATIONS.md) — 새 책 등록, 공개 경로, 배포 확인
 
@@ -25,4 +25,5 @@ GitHub Pages 기반 공개 정적 그림책 도서관입니다. 모바일에서 
 
 > 과거 Git 커밋·외부 캐시에는 이전 이름이 남아 있을 수 있습니다. 이력 재작성은 별도 작업입니다.
 
-- [공통 열람 템플릿](templates/storybook.html) — 신규 작품용 세로/페이지 토글 예시
+- [공통 열람 템플릿](templates/storybook.html) — 신규 작품용 구조 규약(읽기 방식과 낭독은 공통 플레이어가 삽입)
+- [낭독 도구](tools/narration/README.md) — 장면별 MP3 합성·삽입·검증, 브라우저 시험

@@ -6,6 +6,7 @@
 .nar-bar .nar-play{background:var(--nar-accent,#38634b);color:#fff;border-color:var(--nar-accent,#38634b)}
 .nar-bar button:disabled,.nar-pager button:disabled{opacity:.45;cursor:default}
 .nar-bar :focus-visible,.nar-pager :focus-visible{outline:3px solid #e5a000;outline-offset:2px}
+.nar-bar[data-narration=off] .nar-play,.nar-bar[data-narration=off] .nar-ai,.nar-bar[data-narration=off] .nar-panel{display:none!important}
 .nar-ai{font-size:12px;color:#52755b;white-space:nowrap}
 .nar-modes{margin-left:auto;display:flex;gap:4px}
 .nar-panel{margin-top:4px}

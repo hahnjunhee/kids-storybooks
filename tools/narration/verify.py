@@ -4,7 +4,9 @@
 HTML 내 manifest와 사이드카 manifest 일치, 상대 URL·캐시 무효화 쿼리, MP3 디코딩·길이·형식·무음·피크, 검수 상태 게이트.
 자동 검증은 사람이 들은 검수가 아니다. 청취는 review_status로 구분한다(unreviewed / pilot_unlistened / approved).
 
-사용(저장소 루트): python tools/narration/verify.py --adapter tools/narration/adapters/electric-eel.json --baseline origin/main --allow-pilot
+사용(저장소 루트):
+  낭독 포함 책: python tools/narration/verify.py --adapter tools/narration/adapters/electric-eel.json --baseline origin/main --allow-pilot
+  읽기 방식만(템플릿): python tools/narration/verify.py --modes-only templates/storybook.html
 """
 import argparse
 import json
@@ -15,7 +17,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common  # noqa: E402
-from build import BLOCK_RE, HASH_LEN, strip_blocks  # noqa: E402
+from build import BLOCK_RE, HASH_LEN, minify_css, minify_js, strip_blocks  # noqa: E402
+from make_adapter import FLAG_RE, unit_hash  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 
 RESULTS = []
@@ -30,12 +33,44 @@ def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
+def verify_modes_only(path, max_bytes=None):
+    """읽기 방식만 삽입한 파일(템플릿 등) 검사: 블록 구성, manifest, 삽입된 플레이어가 현재 소스와 같은지."""
+    html = open(path, encoding="utf8").read()
+    check("삽입 블록은 스타일 1 + 본문 1", len(BLOCK_RE.findall(html)) == 2)
+    check("중복 삽입 없음", html.count('id="narration-manifest"') == 1 and html.count("<!--narration:begin-->") == 1)
+    m = re.search(r'<script type="application/json" id="narration-manifest">(.*?)</script>', html, re.S)
+    man = json.loads(m.group(1).replace("<\\/", "</")) if m else None
+    check("manifest 존재", man is not None)
+    if man is None:
+        sys.exit(1)
+    check("player_version 일치", man["player_version"] == common.PLAYER_VERSION, man["player_version"])
+    check("낭독 장면 없음(읽기 방식만)", man["scenes"] == [])
+    check("container·sections 지정", bool(man.get("container")) and bool(man.get("sections")))
+    check("삽입된 스크립트가 현재 player.js와 동일", ("<script>" + minify_js() + "</script>") in html)
+    check("삽입된 스타일이 현재 player.css와 동일", ("<style>" + minify_css() + "</style>") in html)
+    soup = BeautifulSoup(strip_blocks(html), "html.parser")
+    check("장면 섹션 존재(main > section)", len(soup.select(man["sections"])) > 0)
+    size = len(html.encode("utf8"))
+    print(f"보고: HTML {size}B")
+    if max_bytes:
+        check("최종 HTML 용량 목표(플레이어 포함)", size <= max_bytes, f"{size}B / 목표 {max_bytes}B")
+    fails = [r for r in RESULTS if not r[1]]
+    print(f"\n검사 {len(RESULTS)}개, 실패 {len(fails)}개")
+    sys.exit(1 if fails else 0)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--adapter", required=True)
-    ap.add_argument("--baseline", required=True, help="원본 HTML을 읽을 git 참조(예: origin/main)")
+    ap.add_argument("--adapter")
+    ap.add_argument("--baseline", help="원본 HTML을 읽을 git 참조(예: origin/main)")
     ap.add_argument("--allow-pilot", action="store_true", help="pilot_unlistened 상태의 시범 배포 허용")
+    ap.add_argument("--modes-only", metavar="HTML", help="읽기 방식만 삽입한 파일 검사(예: templates/storybook.html)")
+    ap.add_argument("--max-html-bytes", type=int, default=None, help="최종 HTML 용량 목표(바이트, 플레이어 삽입분 포함). 신규 작품은 500000. 어댑터의 size_exception 사유가 있으면 예외로 통과")
     a = ap.parse_args()
+    if a.modes_only:
+        verify_modes_only(a.modes_only, a.max_html_bytes)
+    if not a.adapter or not a.baseline:
+        raise SystemExit("--adapter와 --baseline이 필요함(또는 --modes-only <HTML>)")
     ad = common.load_adapter(a.adapter)
     html = open(ad["html"], encoding="utf8").read()
     side = json.load(open(os.path.join(ad["audio_dir"], "manifest.json"), encoding="utf8"))
@@ -66,11 +101,15 @@ def main():
     soup = BeautifulSoup(stripped, "html.parser")
     pron = ad.get("pronunciation", [])
     total_chars = total_dur = 0
+    flagged = {}
     check("장면 수 일치", len(side["scenes"]) == len(emb["scenes"]) == len(ad["scenes"]), str(len(ad["scenes"])))
     for sc, ss, es in zip(ad["scenes"], side["scenes"], emb["scenes"]):
         sid = sc["scene_id"]
         units = common.scene_units(soup, sc)
         narr = [common.apply_pron(u, pron) for u in units]
+        for u in units:
+            if FLAG_RE.search(u):
+                flagged[unit_hash(u)] = (sid, u[:30])
         th = common.text_hash(units)
         check(f"{sid} text_hash(표시 본문)", th == ss["text_hash"] and es["text_hash"] == th[:HASH_LEN])
         synth_input = {"units": narr, "pronunciation": pron, "engine": side["engine"], "model": side["model_version"], "speaker": side["speaker"],
@@ -105,7 +144,21 @@ def main():
         total_chars += chars
         total_dur += dur
 
-    # 5. 크기 보고(통과/실패 아님)
+    # 4-2. 숫자·영문 발음 검수 기록(make_adapter.py가 기록, 사람이 들은 뒤 reviewed로 바꾼다)
+    rev = {e["unit_hash"]: e for e in ad.get("pronunciation_review", [])}
+    for h, (sid, prev) in flagged.items():
+        e = rev.get(h)
+        ok = e is not None and e.get("status") in ("pending", "reviewed") and (e.get("status") == "reviewed" or st != "approved")
+        why = "기록 없음(make_adapter.py --update)" if e is None else f"status={e.get('status')}"
+        check(f"{sid} 숫자·영문 발음 검수 기록({prev}…)", ok, why + (" — approved는 reviewed 필요" if (not ok and e is not None and e.get("status") == "pending") else ""))
+    check("발음 검수 기록에 낡은 항목 없음(본문이 바뀐 뒤 갱신됨)", set(rev) <= set(flagged), ", ".join(sorted(set(rev) - set(flagged))))
+
+    # 5. 용량(플레이어 삽입분 포함, MP3는 별도 관리) 점검과 보고
+    size = len(html.encode("utf8"))
+    if a.max_html_bytes:
+        exc = (ad.get("size_exception") or "").strip()
+        check("최종 HTML 용량 목표(플레이어 포함)", size <= a.max_html_bytes or bool(exc),
+              f"{size}B / 목표 {a.max_html_bytes}B" + (f", 초과 사유 기록: {exc}" if size > a.max_html_bytes and exc else ""))
     inj = sum(len(b.encode("utf8")) for b in BLOCK_RE.findall(html))
     mp3_total = sum(os.path.getsize(os.path.join(ad["audio_dir"], s["audio_file"])) for s in side["scenes"])
     print(f"\n보고: 낭독 {total_chars}자, 음성 {total_dur:.1f}초({total_dur / 60:.1f}분), MP3 합계 {mp3_total / 1024:.0f}KB")

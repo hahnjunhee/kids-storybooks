@@ -20,6 +20,9 @@ assets/cover-*.webp, cover-yeongheung.svg
 docs/STORYBOOK_GUIDELINES.md
 docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md
 docs/BOOK_LIBRARY_OPERATIONS.md
+templates/storybook.html
+audio/<slug>/sNN.mp3
+tools/narration/
 ```
 
 ## 새 그림책 등록
@@ -27,8 +30,9 @@ docs/BOOK_LIBRARY_OPERATIONS.md
 2. 기본 배포는 Base64 이미지 내장 **단일 HTML**이며 `books/`에 저장한다. 이미지 분리형은 작품별 선택사항이다.
 3. 표지와 공통 자산은 `assets/`에 저장한다. 원본 고해상도·비공개 캐릭터 시트는 공개 저장소에 넣지 않는다.
 4. `books.json`에 책 항목(제목·소개·시리즈·권수·표지·태그·링크)을 한 줄 추가한다. `index.html`은 수정하지 않는다. 표지는 `assets/cover-*.webp`(base64 인라인 금지).
-5. 이름 노출·이미지 누락·모바일·PC·글자 크기·인쇄·링크를 검증한다.
-6. 공개 GitHub Pages URL의 실제 작동 여부를 확인한다. 확인하지 못하면 미검증으로 보고한다.
+5. 낭독 포함 작품은 [tools/narration/README.md](../tools/narration/README.md)의 순서(어댑터 생성 → 합성 → 삽입 → 검증 → 전 장면 청취)를 따르고 `audio/<slug>/`를 함께 커밋한다. 음성 준비 전에는 읽기 방식만 삽입한다.
+6. 이름 노출·이미지 누락·모바일·PC·글자 크기·인쇄·링크를 검증한다.
+7. 공개 GitHub Pages URL(낭독 포함 작품은 음성 파일 접근 포함)의 실제 작동 여부를 확인한다. 확인하지 못하면 미검증으로 보고한다.
 
 ## 현재 수록
 | 제목 | 파일 |

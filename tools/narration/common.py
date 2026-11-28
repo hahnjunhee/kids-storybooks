@@ -11,7 +11,7 @@ import unicodedata
 
 from bs4 import BeautifulSoup
 
-PLAYER_VERSION = "1.0.0"
+PLAYER_VERSION = "1.2.0"
 SCHEMA_VERSION = 1
 
 
