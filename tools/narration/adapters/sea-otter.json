@@ -1,0 +1,110 @@
+{
+ "book_id": "sea-otter",
+ "html": "books/sea-otter.html",
+ "audio_dir": "audio/sea-otter",
+ "audio_url_prefix": "../audio/sea-otter/",
+ "container": "main",
+ "sections": "main > section",
+ "scope": "제목(표지 h2, 장 h2)과 본문 .lead,.prose p. 제외: 표지 소개 문단, 쪽 번호, 지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity 등), 푸터.",
+ "pronunciation": [],
+ "pronunciation_review": [],
+ "scenes": [
+  {
+   "scene_id": "scene0",
+   "selector": "#scene0",
+   "heading": "h2",
+   "paragraphs": [],
+   "audio_file": "s00.mp3"
+  },
+  {
+   "scene_id": "scene1",
+   "selector": "#scene1",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s01.mp3"
+  },
+  {
+   "scene_id": "scene2",
+   "selector": "#scene2",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s02.mp3"
+  },
+  {
+   "scene_id": "scene3",
+   "selector": "#scene3",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s03.mp3"
+  },
+  {
+   "scene_id": "scene4",
+   "selector": "#scene4",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s04.mp3"
+  },
+  {
+   "scene_id": "scene5",
+   "selector": "#scene5",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s05.mp3"
+  },
+  {
+   "scene_id": "scene6",
+   "selector": "#scene6",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s06.mp3"
+  },
+  {
+   "scene_id": "scene7",
+   "selector": "#scene7",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s07.mp3"
+  },
+  {
+   "scene_id": "scene8",
+   "selector": "#scene8",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s08.mp3"
+  },
+  {
+   "scene_id": "scene9",
+   "selector": "#scene9",
+   "heading": "h2",
+   "paragraphs": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_file": "s09.mp3"
+  }
+ ]
+}

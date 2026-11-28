@@ -10,7 +10,7 @@
  * 모든 저장소 접근은 try/catch, 오류는 UI 안내로 처리한다. */
 (function () {
   'use strict';
-  var VERSION = '1.2.0';
+  var VERSION = '1.2.1';
   if (window.__narrationLoaded) return;
   var mEl = document.getElementById('narration-manifest');
   if (!mEl) return;
@@ -105,6 +105,7 @@
     bar.setAttribute('data-view', mode);
   }
   function showSection(si, smooth) {
+    setBarHeight(); // 스크롤 여백(--nar-h)을 지금의 상단바 높이로 갱신(버튼이 줄바꿈되어 높이가 바뀔 수 있다)
     var el = sections[si];
     if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
   }
@@ -323,7 +324,7 @@
       else if (a === 'prev') moveTo(prevOk(cur));
       else if (a === 'next') moveTo(nextOk(cur));
       else if (a === 'cont') { cont = !cont; updateUI(); }
-      else if (a === 'follow') { follow = true; if (cur >= 0) syncView(cur); updateUI(); }
+      else if (a === 'follow') { follow = true; updateUI(); if (cur >= 0) syncView(cur); } // 버튼이 숨겨지며 줄어드는 상단바 높이를 먼저 반영한 뒤 이동
       else if (a === 'retry') { clearError(); ready.then(g(function () { playScene(cur >= 0 ? cur : firstOk()); })); }
     }));
     $rate.addEventListener('change', g(function () {

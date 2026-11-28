@@ -1,0 +1,253 @@
+{
+ "schema_version": 1,
+ "player_version": "1.2.1",
+ "book_id": "sea-otter",
+ "scope": "제목(표지 h2, 장 h2)과 본문 .lead,.prose p. 제외: 표지 소개 문단, 쪽 번호, 지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity 등), 푸터.",
+ "engine": "MeloTTS",
+ "engine_commit": "2091453",
+ "model_version": "myshell-ai/MeloTTS-Korean@0207e5adfc90129a51b6b03d89be6d84360ed323",
+ "bert_version": "kykim/bert-kor-base@1779cc0982ada0216dd6de0dd4e86fb78201926d",
+ "runtime": {
+  "torch": "2.14.1+cu130",
+  "transformers": "4.27.4"
+ },
+ "speaker": "KR",
+ "settings": {
+  "speed": 1.0,
+  "sdp_ratio": 0.2,
+  "noise_scale": 0.6,
+  "noise_scale_w": 0.8
+ },
+ "postprocess": "A-raw-concat-1",
+ "mp3": {
+  "codec": "libmp3lame",
+  "bitrate": "64k",
+  "channels": 1,
+  "sample_rate": 44100
+ },
+ "pronunciation": [],
+ "review_status": "pilot_unlistened",
+ "scenes": [
+  {
+   "scene_id": "scene0",
+   "selector": "#scene0",
+   "heading_selector": "h2",
+   "paragraph_selectors": [],
+   "audio_url": "../audio/sea-otter/s00.mp3",
+   "audio_file": "s00.mp3",
+   "duration": 3.109,
+   "paragraph_start_seconds": [
+    0.0
+   ],
+   "text_hash": "a1020161f60cfbcedf5643cd58dc7f306c308a2187047a6f8632a2a37ebd2a25",
+   "synthesis_hash": "06d77129f6d23af01bfc943c8b04cc050962819232562427d25782c4604d29f4",
+   "audio_hash": "f71d4c51437c12297a31d3c7b6d81f12c9350020f8b4423716693b858b01b16f"
+  },
+  {
+   "scene_id": "scene1",
+   "selector": "#scene1",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s01.mp3",
+   "audio_file": "s01.mp3",
+   "duration": 22.7,
+   "paragraph_start_seconds": [
+    0.0,
+    2.558,
+    5.754,
+    9.798,
+    17.61
+   ],
+   "text_hash": "4b653849d33a6e9b65afefc8902888782a878a3f5410d220a0092f93bc1b0033",
+   "synthesis_hash": "3aab6e3c75ca632b206137e33de39f63875525203ddb92b53ccf179929c3a1bd",
+   "audio_hash": "ae61aebe3a261b66ceb0d7560a5cd30c16dde840c76776224c9ea3fee5eebaeb"
+  },
+  {
+   "scene_id": "scene2",
+   "selector": "#scene2",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s02.mp3",
+   "audio_file": "s02.mp3",
+   "duration": 20.898,
+   "paragraph_start_seconds": [
+    0.0,
+    2.384,
+    5.975,
+    10.483,
+    16.968
+   ],
+   "text_hash": "643beba31ebadceb1c159ca73b8b50634b4aa3ceb751a6873c6c4f44d2f0d4c0",
+   "synthesis_hash": "e7f6f4337d2cabc578e9158dee1a8c48a7366bee13ff3ca35375ce3fd847514a",
+   "audio_hash": "0ce7b8053c3f7d0ed5072229009dec67b1814b32489b84a8644f0b5695718719"
+  },
+  {
+   "scene_id": "scene3",
+   "selector": "#scene3",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s03.mp3",
+   "audio_file": "s03.mp3",
+   "duration": 22.648,
+   "paragraph_start_seconds": [
+    0.0,
+    2.523,
+    5.487,
+    9.101,
+    14.004,
+    17.584
+   ],
+   "text_hash": "900ae994b3e54cea044656ac6a6f1fba7c19f6aa09b3ec722a7f1eadd604da42",
+   "synthesis_hash": "d1786f8b00a5e51ff4d5467e3c4dccb37510cb5f763bd01812e237c87b7d0a06",
+   "audio_hash": "8a067f6d0f97087883f86439ff2cfb0958b9e0e64f98f3bb3d6fce10a4005b03"
+  },
+  {
+   "scene_id": "scene4",
+   "selector": "#scene4",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s04.mp3",
+   "audio_file": "s04.mp3",
+   "duration": 22.413,
+   "paragraph_start_seconds": [
+    0.0,
+    2.175,
+    4.907,
+    9.566,
+    15.177,
+    19.244
+   ],
+   "text_hash": "19951a7af76a21db5411c3cb32e0fc55d05139be24099b9dccb49a2b69c049ea",
+   "synthesis_hash": "9e303f268c79f665f3ad0b7ac14be173a746351010acd7f25ebf4efd07cfa0d6",
+   "audio_hash": "9b019688896592846be6dcd57f58be2085618be397dc361d7a206f15164cc9ba"
+  },
+  {
+   "scene_id": "scene5",
+   "selector": "#scene5",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s05.mp3",
+   "audio_file": "s05.mp3",
+   "duration": 23.275,
+   "paragraph_start_seconds": [
+    0.0,
+    2.697,
+    6.253,
+    11.462,
+    17.27,
+    20.641
+   ],
+   "text_hash": "c2895281a43e38728f3d518de31b2c908fb10c820ad390661a35e959463a15bf",
+   "synthesis_hash": "95311a33ec0ad8cc4ecb21e1a458f827c205ca77ceed8a8d35578860ab2b07e1",
+   "audio_hash": "03a50b8b9ea30d12c72a6974792c3990978a4be3bb802940dd57bfeeed53a858"
+  },
+  {
+   "scene_id": "scene6",
+   "selector": "#scene6",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s06.mp3",
+   "audio_file": "s06.mp3",
+   "duration": 21.656,
+   "paragraph_start_seconds": [
+    0.0,
+    2.546,
+    5.371,
+    10.135,
+    17.201
+   ],
+   "text_hash": "90974d3bfce79d29bf67a94eeedd15f3dc88798bb53e863aae82b3bd30440bdf",
+   "synthesis_hash": "c448a7b99cd1c56f8973965d74e5e6d41d32fedb1ced6f3e31d46b6939c3363d",
+   "audio_hash": "0d0f319e8138e17ae3d5a1e5e8d0a2af7a04249b1b4f42e10e17e69edae209da"
+  },
+  {
+   "scene_id": "scene7",
+   "selector": "#scene7",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s07.mp3",
+   "audio_file": "s07.mp3",
+   "duration": 24.607,
+   "paragraph_start_seconds": [
+    0.0,
+    2.871,
+    5.777,
+    10.135,
+    16.632,
+    20.85
+   ],
+   "text_hash": "712398d08644768ac92b0ec09fc8491b3d14318e4286a019e347116d7f933616",
+   "synthesis_hash": "bbc57dcf35336bcf7348c304060e5fff598755314b539cd72bedbbe8738d97ab",
+   "audio_hash": "f102efe7f0326bc2b71bf850f41bf32d9193336d26481cad800a4f03bc20996f"
+  },
+  {
+   "scene_id": "scene8",
+   "selector": "#scene8",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s08.mp3",
+   "audio_file": "s08.mp3",
+   "duration": 24.007,
+   "paragraph_start_seconds": [
+    0.0,
+    2.871,
+    5.452,
+    8.358,
+    16.91,
+    19.979
+   ],
+   "text_hash": "d72d3f7b4b3e55d77d3763e64233daca4c3e4da8eba789f0faa65a82137b822e",
+   "synthesis_hash": "04ed1406e27580e862f9c0f215b55764d9d6f3568d5b00db80415d8d3f971bac",
+   "audio_hash": "45429390cfc8a851a687aa113c5ae5ba790138ee1a3cdfca976a4e3d2aafc544"
+  },
+  {
+   "scene_id": "scene9",
+   "selector": "#scene9",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".lead",
+    ".prose p"
+   ],
+   "audio_url": "../audio/sea-otter/s09.mp3",
+   "audio_file": "s09.mp3",
+   "duration": 26.514,
+   "paragraph_start_seconds": [
+    0.0,
+    2.349,
+    4.941,
+    9.972,
+    12.948,
+    15.831,
+    19.201,
+    22.931
+   ],
+   "text_hash": "dab1d832e24c35082ff824cbb396b355aff1cd5fa1d24d1e111f9eaf28c239a9",
+   "synthesis_hash": "a2bc40ff4e61833374bff5324e433e54c51dc6519fee5290201eebedf1b5e313",
+   "audio_hash": "4a4b8b5efaa5802e6cea268e0286e39b36d4d29bfb617674f96d73c7497cb9e6"
+  }
+ ]
+}

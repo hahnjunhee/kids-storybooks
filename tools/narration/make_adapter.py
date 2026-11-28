@@ -14,6 +14,7 @@
 사용(저장소 루트):
   새로 만들기: python tools/narration/make_adapter.py --html books/<slug>.html --book-id <slug> --out tools/narration/adapters/<slug>.json
   다시 만들기: 같은 명령에 --update
+  규약과 다른 책(기존 작품): --cover-heading h2 --paragraphs ".lead,.prose p" 처럼 선택자를 지정한다(학습 카드 aside 등 지정하지 않은 요소는 낭독하지 않는다).
 """
 import argparse
 import json
@@ -27,6 +28,15 @@ import common  # noqa: E402
 SCOPE = "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(section.activity), 푸터."
 FLAG_RE = re.compile(r"[0-9A-Za-z]")
 KNOWN = {"book_id", "html", "audio_dir", "audio_url_prefix", "container", "sections", "scope", "pronunciation", "pronunciation_review", "size_exception", "scenes"}
+
+
+def scope_text(a):
+    """낭독 범위 문구: 템플릿 기본 선택자면 표준 문구, 아니면 실제 선택자를 적는다."""
+    if (a.cover_heading, a.heading, a.paragraphs, a.cover_paragraphs) == ("h1", "h2", ".story p", ""):
+        return SCOPE
+    cover = f"표지 {a.cover_heading}" + (f" + {a.cover_paragraphs}" if a.cover_paragraphs else "")
+    return (f"제목({cover}, 장 {a.heading})과 본문 {a.paragraphs}. 제외: 표지 소개 문단, 쪽 번호, "
+            "지정하지 않은 요소(학습 카드 aside, 발견 노트·탐구 section.activity 등), 푸터.")
 
 
 def unit_hash(text):
@@ -64,6 +74,10 @@ def main():
     ap.add_argument("--book-id", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--update", action="store_true", help="이미 있는 어댑터를 다시 만든다(발음 치환·검수 기록 보존)")
+    ap.add_argument("--cover-heading", default="h1", help="표지(scene0) 제목 선택자(템플릿 규약은 h1)")
+    ap.add_argument("--heading", default="h2", help="장 제목 선택자(템플릿 규약은 h2)")
+    ap.add_argument("--paragraphs", default=".story p", help="장 본문 선택자(쉼표로 여러 개, 문서 순서가 아니라 나열한 순서로 읽음). 템플릿 규약은 '.story p'")
+    ap.add_argument("--cover-paragraphs", default="", help="표지에서 낭독할 문단 선택자(기본은 없음: 표지 소개는 낭독하지 않음)")
     a = ap.parse_args()
     if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", a.book_id):
         raise SystemExit("book-id는 영문 소문자·숫자·하이픈 slug여야 함(이름 없는 파일명 정책)")
@@ -85,14 +99,15 @@ def main():
     for i, sec in enumerate(scene_secs):
         sid = sec.get("id", f"scene{i}")
         cover = i == 0
-        head = "h1" if cover else "h2"
+        head = a.cover_heading if cover else a.heading
         h = sec.select_one(head)
         if h is None or not common.norm(h.get_text()):
             errors.append(f"{sid}: 제목 {head}가 없음")
-        paras = [] if cover else [".story p"]
-        if not cover and not sec.select(".story p"):
-            errors.append(f"{sid}: 본문 .story p가 없음")
-        if cover and sec.select_one("h2"):
+        sels = [x.strip() for x in (a.cover_paragraphs if cover else a.paragraphs).split(",") if x.strip()]
+        paras = sels
+        if not cover and not any(sec.select(x) for x in sels):
+            errors.append(f"{sid}: 본문 {a.paragraphs}가 없음")
+        if cover and a.cover_heading == "h1" and sec.select_one("h2"):
             warns.append(f"{sid}: 표지에 h2가 있음(낭독은 h1만)")
         scenes.append({"scene_id": sid, "selector": "#" + sid, "heading": head, "paragraphs": paras, "audio_file": "s%02d.mp3" % i})
     for w in warns:
@@ -126,7 +141,7 @@ def main():
 
     ad = dict(old or {})
     ad.update({"book_id": a.book_id, "html": a.html, "audio_dir": "audio/" + a.book_id, "audio_url_prefix": "../audio/" + a.book_id + "/",
-               "container": "main", "sections": "main > section", "scope": SCOPE, "pronunciation": pron, "pronunciation_review": review, "scenes": scenes})
+               "container": "main", "sections": "main > section", "scope": scope_text(a), "pronunciation": pron, "pronunciation_review": review, "scenes": scenes})
     json.dump(ad, open(a.out, "w", encoding="utf8"), ensure_ascii=False, indent=1)
     kept = [k for k in (old or {}) if k not in KNOWN]
     print(f"어댑터 {'갱신' if old else '생성'}: {a.out} (장면 {len(scenes)}개, 발음 치환 {len(pron)}개 보존, 검수 기록 {len(review)}개" + (f", 추가 키 보존: {', '.join(kept)}" if kept else "") + ")")

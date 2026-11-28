@@ -12,12 +12,12 @@
 - `adapters/<book>.json`: 책별 어댑터. 장면 선택자, 제목·문단 선택자, 발음 치환, 오디오 위치. 낭독 범위는 `scope` 필드에 적는다.
 - `common.py`: 본문 추출·정규화·해시 규칙(브라우저와 같은 규칙).
 - `synth.py`: 장면별 합성(MeloTTS). 저장소 밖 클라우드 세션에서만 실행하고 결과 MP3와 `manifest.json`만 커밋한다. 변경된 장면만 다시 합성한다.
-- `make_adapter.py`: 공통 열람 템플릿 규약을 따르는 신규 작품에서 어댑터를 생성·갱신한다. 이미 있는 어댑터는 `--update` 없이는 덮어쓰지 않고, `--update`는 발음 치환(`pronunciation`)·발음 검수 기록(`pronunciation_review`)·`size_exception`·알 수 없는 키를 보존한다. 규약 밖 section은 조용히 건너뛰지 않고 오류로 멈춘다. 숫자·영문 단위는 `pending`으로 기록한다.
+- `make_adapter.py`: 공통 열람 템플릿 규약을 따르는 작품에서 어댑터를 생성·갱신한다. 규약과 다른 기존 책은 `--cover-heading h2 --paragraphs ".lead,.prose p"`처럼 선택자를 지정한다(지정하지 않은 요소는 낭독하지 않으며 `scope`에 기록). 이미 있는 어댑터는 `--update` 없이는 덮어쓰지 않고, `--update`는 발음 치환(`pronunciation`)·발음 검수 기록(`pronunciation_review`)·`size_exception`·알 수 없는 키를 보존한다. 규약 밖 section은 조용히 건너뛰지 않고 오류로 멈춘다. 숫자·영문 단위는 `pending`으로 기록한다.
 - `build.py`: 플레이어를 책 HTML에 삽입한다. 추가 전용이며 다시 실행해도 중복되지 않는다. `--modes-only`는 음성 없이 읽기 방식만 삽입한다(템플릿·음성 준비 전 책).
 - `verify.py`: 배포 전 자동 검증 게이트(실패 시 종료 코드 1). 발음 검수 기록(`approved`는 전부 `reviewed` 필요)과 `--max-html-bytes`(신규 작품은 500000, 플레이어 포함, `size_exception` 사유가 있으면 예외) 검사를 포함한다. `--modes-only <HTML>`은 읽기 방식만 삽입한 파일(템플릿)의 삽입 상태를 검사한다.
 - `asr_check.py`: 보조 점검. 합성 음성을 음성 인식으로 받아 적어 원문과 비교한다. 사람의 청취를 대체하지 않는다.
 - `survey.py` → `STRUCTURE_SURVEY.md`: 전체 책 HTML 구조 전수 조사.
-- `tests/`: 브라우저 통합 시험(Playwright, `run-tests.sh`)과 도구 단위 시험(`python tools/narration/tests/test_tools.py`). 장애 격리(manifest 손상·버전 불일치·MP3 404·재생 예외·초기화 예외·오프라인) 시험을 포함한다.
+- `tests/`: 브라우저 시험(Playwright)과 도구 단위 시험(`python tools/narration/tests/test_tools.py`). `run-tests.sh`는 전기뱀장어 전용(125개), **`run-book-tests.sh <어댑터> <기준 git 참조>`는 책별 범용 시험**이다. 범용 시험은 장면 수·id·음성 파일·제목을 책의 manifest와 DOM에서 읽으므로 책마다 코드를 바꾸지 않으며, 낭독 적용 전 원본(기준본)과 본문·삽화·기존 버튼·인쇄 쪽 수를 비교하고 장애 격리(manifest 손상·버전 불일치·MP3 404·재생 예외·오프라인)를 검증한다. 책 CSS에 `scroll-behavior:smooth`가 있으면 스크롤 애니메이션이 끝날 때까지 기다린다.
 
 ## 산출물
 - `audio/<book>/sNN.mp3`: 장면별 MP3(mono, 64kbps, 44.1kHz). `audio/<book>/manifest.json`: 전체 해시를 담은 사이드카.
@@ -54,3 +54,10 @@ bash tools/narration/tests/run-tests.sh origin/main
 3. 음성이 아직 없으면 `build.py --modes-only --html books/<slug>.html`로 읽기 방식만 삽입한다(템플릿에는 이미 들어 있음).
 4. 낭독 포함 출시: 위 "실행 순서"(합성 → 삽입 → 검증 → 브라우저 시험)를 따르고 전 장면을 들어 `review_status`를 `approved`로 올린다. 신규 작품은 `verify.py ... --max-html-bytes 500000`으로 용량 목표(플레이어 포함, MP3 제외)를 확인하고, 초과가 불가피하면 어댑터 `size_exception`에 사유를 적고 사용자 승인을 받는다.
 5. 템플릿에는 플레이어가 삽입돼 있다. `player.js`를 고치면 `build.py --modes-only --html templates/storybook.html --book-id template`로 다시 삽입하고 `verify.py --modes-only templates/storybook.html`로 확인한다.
+
+## 적용 현황 (기존 8권)
+| 책 | 상태 | 비고 |
+|---|---|---|
+| electric-eel | 낭독 완료(`approved`) | 2026-11-28 사용자 전 장면 청취 승인 |
+| sea-otter | 낭독 시범(`pilot_unlistened`) | 어댑터 `--cover-heading h2 --paragraphs ".lead,.prose p"`. 과학 돋보기(aside)·탐구 노트(section.activity)는 낭독 제외. 청취 승인 대기 |
+| lulu-friends, yeongheung, craft-museum, dinosaur, blood-friends, lua-pink-bicycle | 미적용 | 구조 조사 `STRUCTURE_SURVEY.md`. 한 권씩 어댑터 작성 → 합성 → 검증 → 공개 → 사용자 청취 승인 |
