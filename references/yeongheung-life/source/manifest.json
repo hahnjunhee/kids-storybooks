@@ -1,0 +1,71 @@
+{
+  "source": "books/yeongheung-seaside.html",
+  "source_blob": "7a806f42b7ce99aa99d65516345d20d4b5fe0bf1",
+  "declared_dimensions": [
+    1448,
+    1086
+  ],
+  "visual_review": "pending",
+  "scenes": [
+    {
+      "scene": 1,
+      "file": "scene-01.webp",
+      "bytes": 39662
+    },
+    {
+      "scene": 2,
+      "file": "scene-02.webp",
+      "bytes": 40768
+    },
+    {
+      "scene": 3,
+      "file": "scene-03.webp",
+      "bytes": 58242
+    },
+    {
+      "scene": 4,
+      "file": "scene-04.webp",
+      "bytes": 78476
+    },
+    {
+      "scene": 5,
+      "file": "scene-05.webp",
+      "bytes": 61182
+    },
+    {
+      "scene": 6,
+      "file": "scene-06.webp",
+      "bytes": 62858
+    },
+    {
+      "scene": 7,
+      "file": "scene-07.webp",
+      "bytes": 69434
+    },
+    {
+      "scene": 8,
+      "file": "scene-08.webp",
+      "bytes": 64844
+    },
+    {
+      "scene": 9,
+      "file": "scene-09.webp",
+      "bytes": 61134
+    },
+    {
+      "scene": 10,
+      "file": "scene-04.webp",
+      "bytes": 78476
+    },
+    {
+      "scene": 11,
+      "file": "scene-11.webp",
+      "bytes": 54054
+    },
+    {
+      "scene": 12,
+      "file": "scene-12.webp",
+      "bytes": 49588
+    }
+  ]
+}
