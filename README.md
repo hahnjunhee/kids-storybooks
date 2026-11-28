@@ -14,8 +14,8 @@ GitHub Pages 기반 공개 정적 그림책 도서관입니다. 모바일에서 
 - `books/korean-electric-eel-storybook.html` — 《찌릿찌릿! 전기뱀장어의 비밀》 (v1.0.1)
 
 ## 제작·운영 기준
-- [그림책 제작 가이드라인 v3.1](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
-- [이미지 스타일 가이드 v2.3.1](docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md) — 삽화 유형·품질 기준
+- [그림책 제작 가이드라인 v3.1.1](docs/STORYBOOK_GUIDELINES.md) — 원작 보존, 별칭·개인정보, 캐릭터 일관성, HTML, 압축, 품질 검증, 게시
+- [이미지 스타일 가이드 v2.4](docs/ILLUSTRATION_STYLE_GUIDE_V2.3.md) — 삽화 유형·품질 기준
 - [도서관 운영 가이드](docs/BOOK_LIBRARY_OPERATIONS.md) — 새 책 등록, 공개 경로, 배포 확인
 
 주인공의 기본 별칭은 **루아**이며, 작품별로 바꾸거나 생략할 수 있습니다. 실제 아동 이름은 공개 콘텐츠에 사용하지 않습니다.
