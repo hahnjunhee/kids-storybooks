@@ -318,7 +318,12 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
 
   // K. 본문과 음성 불일치(해시), 버전 불일치
   await guard('K 불일치 방어', async () => {
-    const o1 = await open(browser, { route: async (p) => { await p.route('**/korean-electric-eel-storybook.html', async (r) => { const res = await r.fetch(); let body = await res.text(); body = body.replace('<h2>특별한 능력</h2>', '<h2>특별한 능럭</h2>'); await r.fulfill({ response: res, body }); }); } });
+    // 원본 HTML은 브라우저 안에서 가져온다(Node 쪽 요청은 프록시 환경에서 외부 도메인을 못 찾을 수 있다)
+    const t = await open(browser);
+    const raw = await t.page.evaluate(() => fetch(location.href).then((x) => x.text()));
+    await t.ctx.close();
+    const mod = (fn) => ({ route: async (p) => { await p.route('**/korean-electric-eel-storybook.html', (r) => r.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: fn(raw) })); } });
+    const o1 = await open(browser, mod((b) => b.replace('<h2>특별한 능력</h2>', '<h2>특별한 능럭</h2>')));
     await o1.page.waitForSelector('.nar-bar');
     await sleep(500);
     await play(o1.page); await waitPlaying(o1.page, 's00.mp3');
@@ -331,7 +336,7 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
     rec('K 불일치 경고가 콘솔에 남음', o1.warns.some((w) => /건너뜀/.test(w)), o1.warns.join(' | ').slice(0, 120));
     await seekEnd(o1.page, 0.3);
     await o1.ctx.close();
-    const o2 = await open(browser, { route: async (p) => { await p.route('**/korean-electric-eel-storybook.html', async (r) => { const res = await r.fetch(); let body = await res.text(); body = body.replace('"player_version":"1.0.0"', '"player_version":"9.9.9"'); await r.fulfill({ response: res, body }); }); } });
+    const o2 = await open(browser, mod((b) => b.replace('"player_version":"1.0.0"', '"player_version":"9.9.9"')));
     await sleep(500);
     rec('K 플레이어·manifest 버전 불일치 시 낭독 UI를 만들지 않음(읽기는 정상)', (await o2.page.$('.nar-bar')) === null && (await o2.page.evaluate(() => document.querySelectorAll('main > section').length)) === 14);
     await o2.ctx.close();
