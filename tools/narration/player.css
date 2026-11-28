@@ -1,0 +1,19 @@
+/* 낭독 플레이어 + 읽기 방식 UI. 색은 CSS 변수로 책마다 바꿀 수 있다(--nar-bg, --nar-ink, --nar-line, --nar-accent). */
+.nar-bar{position:sticky;top:0;z-index:60;background:var(--nar-bg,#eef4ea);border-bottom:1px solid var(--nar-line,#b8cdb9);padding:6px 10px;font:14px/1.4 system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--nar-ink,#243c30)}
+.nar-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.nar-bar button,.nar-bar select,.nar-pager button{min-height:44px;min-width:44px;margin:0;padding:0 10px;font:inherit;font-weight:700;color:var(--nar-ink,#243c30);background:#fff;border:1px solid var(--nar-line,#b8cdb9);border-radius:22px;cursor:pointer}
+.nar-bar button[aria-pressed=true]{background:var(--nar-accent,#38634b);color:#fff;border-color:var(--nar-accent,#38634b)}
+.nar-bar .nar-play{background:var(--nar-accent,#38634b);color:#fff;border-color:var(--nar-accent,#38634b)}
+.nar-bar button:disabled,.nar-pager button:disabled{opacity:.45;cursor:default}
+.nar-bar :focus-visible,.nar-pager :focus-visible{outline:3px solid #e5a000;outline-offset:2px}
+.nar-ai{font-size:12px;color:#52755b;white-space:nowrap}
+.nar-modes{margin-left:auto;display:flex;gap:4px}
+.nar-panel{margin-top:4px}
+.nar-status{font-size:13px;min-height:18px;margin-top:2px}
+.nar-err{margin-top:4px;color:#8a2b1c;font-size:13px}
+.nar-bar [hidden],.nar-pager[hidden]{display:none!important}
+.nar-pager{position:sticky;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;background:var(--nar-bg,#eef4ea);border-top:1px solid var(--nar-line,#b8cdb9);font:14px/1.4 system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--nar-ink,#243c30)}
+.nar-sec{scroll-margin-top:var(--nar-h,64px)}
+@media screen{.nar-off{display:none!important}}
+@media (max-width:360px){.nar-bar button,.nar-bar select,.nar-pager button{padding:0 8px;font-size:13px}}
+@media print{.nar-bar,.nar-pager{display:none!important}}

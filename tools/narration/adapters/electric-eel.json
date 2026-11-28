@@ -1,0 +1,132 @@
+{
+ "book_id": "electric-eel",
+ "html": "books/korean-electric-eel-storybook.html",
+ "audio_dir": "audio/electric-eel",
+ "audio_url_prefix": "../audio/electric-eel/",
+ "container": "main",
+ "sections": "main > section",
+ "scope": "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(#notes, 후속 선택 낭독), 푸터.",
+ "pronunciation": [
+  [
+   "860볼트",
+   "팔백육십 볼트"
+  ]
+ ],
+ "scenes": [
+  {
+   "scene_id": "scene0",
+   "selector": "#scene0",
+   "heading": "h1",
+   "paragraphs": [],
+   "audio_file": "s00.mp3"
+  },
+  {
+   "scene_id": "scene1",
+   "selector": "#scene1",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s01.mp3"
+  },
+  {
+   "scene_id": "scene2",
+   "selector": "#scene2",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s02.mp3"
+  },
+  {
+   "scene_id": "scene3",
+   "selector": "#scene3",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s03.mp3"
+  },
+  {
+   "scene_id": "scene4",
+   "selector": "#scene4",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s04.mp3"
+  },
+  {
+   "scene_id": "scene5",
+   "selector": "#scene5",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s05.mp3"
+  },
+  {
+   "scene_id": "scene6",
+   "selector": "#scene6",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s06.mp3"
+  },
+  {
+   "scene_id": "scene7",
+   "selector": "#scene7",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s07.mp3"
+  },
+  {
+   "scene_id": "scene8",
+   "selector": "#scene8",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s08.mp3"
+  },
+  {
+   "scene_id": "scene9",
+   "selector": "#scene9",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s09.mp3"
+  },
+  {
+   "scene_id": "scene10",
+   "selector": "#scene10",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s10.mp3"
+  },
+  {
+   "scene_id": "scene11",
+   "selector": "#scene11",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s11.mp3"
+  },
+  {
+   "scene_id": "scene12",
+   "selector": "#scene12",
+   "heading": "h2",
+   "paragraphs": [
+    ".story p"
+   ],
+   "audio_file": "s12.mp3"
+  }
+ ]
+}

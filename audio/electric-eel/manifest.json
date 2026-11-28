@@ -1,0 +1,308 @@
+{
+ "schema_version": 1,
+ "player_version": "1.0.0",
+ "book_id": "electric-eel",
+ "scope": "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(#notes, 후속 선택 낭독), 푸터.",
+ "engine": "MeloTTS",
+ "engine_commit": "2091453",
+ "model_version": "myshell-ai/MeloTTS-Korean@0207e5adfc90129a51b6b03d89be6d84360ed323",
+ "bert_version": "kykim/bert-kor-base@1779cc0982ada0216dd6de0dd4e86fb78201926d",
+ "runtime": {
+  "torch": "2.14.1+cu130",
+  "transformers": "4.27.4"
+ },
+ "speaker": "KR",
+ "settings": {
+  "speed": 1.0,
+  "sdp_ratio": 0.2,
+  "noise_scale": 0.6,
+  "noise_scale_w": 0.8
+ },
+ "postprocess": "A-raw-concat-1",
+ "mp3": {
+  "codec": "libmp3lame",
+  "bitrate": "64k",
+  "channels": 1,
+  "sample_rate": 44100
+ },
+ "pronunciation": [
+  [
+   "860볼트",
+   "팔백육십 볼트"
+  ]
+ ],
+ "review_status": "pilot_unlistened",
+ "scenes": [
+  {
+   "scene_id": "scene0",
+   "selector": "#scene0",
+   "heading_selector": "h1",
+   "paragraph_selectors": [],
+   "audio_url": "../audio/electric-eel/s00.mp3",
+   "audio_file": "s00.mp3",
+   "duration": 4.284,
+   "paragraph_start_seconds": [
+    0.0
+   ],
+   "text_hash": "48d57d4d20e6b8ef782b6da6216755aeb82236cecd40433d0da1604df539d0ad",
+   "synthesis_hash": "b7a3fdc95b0b216cec689672fcc77383da98555d93288d85932a9417626a3c79",
+   "audio_hash": "fd387adaae7aaa766890dce65d4c6cf9fb58b0c21212423a7005486d3f582935"
+  },
+  {
+   "scene_id": "scene1",
+   "selector": "#scene1",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s01.mp3",
+   "audio_file": "s01.mp3",
+   "duration": 26.932,
+   "paragraph_start_seconds": [
+    0.0,
+    2.279,
+    7.809,
+    13.644,
+    17.108
+   ],
+   "text_hash": "ad2ee28c2725d5bd590f406c14d1ccc6308f451e34891e5ec0e97bd22a64d0b8",
+   "synthesis_hash": "cf55a329a93aae7f96ed1fac9748537c05600e7e5f2ac3fa1e5ce84861f54c0e",
+   "audio_hash": "837946a9a21183adb2355540e224a1d191cfb4502f74f86cc4346060fa7469bf"
+  },
+  {
+   "scene_id": "scene2",
+   "selector": "#scene2",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s02.mp3",
+   "audio_file": "s02.mp3",
+   "duration": 26.149,
+   "paragraph_start_seconds": [
+    0.0,
+    2.337,
+    6.648,
+    9.473,
+    14.159,
+    18.574
+   ],
+   "text_hash": "739b86db5c215ca6a3c3c55bc28cb36777f6d17556f0a1ae79ff1c169739b89d",
+   "synthesis_hash": "7146298ebc512dfa1ccf74b7bee0ab13e7dd0bb70f49388a0c3d85ab23913792",
+   "audio_hash": "f5d6b29151c58340c836284650285144b3849302a1e5d0c09b6d815869d486e7"
+  },
+  {
+   "scene_id": "scene3",
+   "selector": "#scene3",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s03.mp3",
+   "audio_file": "s03.mp3",
+   "duration": 22.7,
+   "paragraph_start_seconds": [
+    0.0,
+    1.966,
+    8.289,
+    11.694,
+    15.622
+   ],
+   "text_hash": "7c7bb85eda80842ec23877c1d8c766fb863447c333ec723a29dd29416b7f05b7",
+   "synthesis_hash": "4f2bd783a24975da08d65dde07ec433eb0295af9b7072d81f44ec0122c1e2004",
+   "audio_hash": "20fa5576fdd590bf75a8f14d23b1fc7497200b0ac8360e00f68684b667c4dcad"
+  },
+  {
+   "scene_id": "scene4",
+   "selector": "#scene4",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s04.mp3",
+   "audio_file": "s04.mp3",
+   "duration": 31.242,
+   "paragraph_start_seconds": [
+    0.0,
+    2.918,
+    8.575,
+    16.117,
+    21.427
+   ],
+   "text_hash": "6854ee27d53e3002aea935e6e1fbb03bd5bff6894dc426d2de0e595800912e7a",
+   "synthesis_hash": "7b52d9c2ef3e061b354242b1f573c02a6def76f7a8f2d90ab655cff49370d7ae",
+   "audio_hash": "9c414d8a5ce507c951312e2f1d0a2c5712dbe80f28876026b7bc9f8aeeff8305"
+  },
+  {
+   "scene_id": "scene5",
+   "selector": "#scene5",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s05.mp3",
+   "audio_file": "s05.mp3",
+   "duration": 25.391,
+   "paragraph_start_seconds": [
+    0.0,
+    2.569,
+    9.217,
+    13.598,
+    18.315
+   ],
+   "text_hash": "cd563847fcb4758b29fd2577e57b0ed3b46bf733779bbc184a84169836dd5d13",
+   "synthesis_hash": "76e6f8e633c5001beb46fce014ee69e4a0cbf53a4a2ddd2341591b021a009970",
+   "audio_hash": "584b03e978df2278b56a109240a577b2be7af00af258f0b2513735583bf1da37"
+  },
+  {
+   "scene_id": "scene6",
+   "selector": "#scene6",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s06.mp3",
+   "audio_file": "s06.mp3",
+   "duration": 22.753,
+   "paragraph_start_seconds": [
+    0.0,
+    2.674,
+    6.671,
+    10.878,
+    12.553,
+    17.119
+   ],
+   "text_hash": "e0bab20e37be5d789c64ac665f4f1be58d208d80d5e8438dd69ed32e89e37da1",
+   "synthesis_hash": "fafcc836792c9d99a3257d95d8ac6325b58b83d9452c564d4edc5007ebf19ee8",
+   "audio_hash": "aff17b3bc11be40b856b4e131137c7be580e372e48f3847a9afbade9bfcccd7b"
+  },
+  {
+   "scene_id": "scene7",
+   "selector": "#scene7",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s07.mp3",
+   "audio_file": "s07.mp3",
+   "duration": 28.395,
+   "paragraph_start_seconds": [
+    0.0,
+    2.5,
+    7.763,
+    13.923,
+    21.337
+   ],
+   "text_hash": "e0db16c08183e9c4d94436e1cd854d14620677e26d2c1aa451599923f5261a17",
+   "synthesis_hash": "9d126c02f8ffbed3c005ab7e10beab6ca310f7a0dfe852a38b0203b8a1d35223",
+   "audio_hash": "c2c7c0c4b353997414c0466fb96bad643bb081aff3a39e20fdb12f10d93c089c"
+  },
+  {
+   "scene_id": "scene8",
+   "selector": "#scene8",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s08.mp3",
+   "audio_file": "s08.mp3",
+   "duration": 27.951,
+   "paragraph_start_seconds": [
+    0.0,
+    2.883,
+    7.705,
+    12.131,
+    19.337
+   ],
+   "text_hash": "254bb38f1b2916a92b8781b33882086210fc1e7cc26eedb44faf9b1ab4573059",
+   "synthesis_hash": "854403db368f5ff6827628daaf48808671a77520aea6f640fb037e81b48961de",
+   "audio_hash": "07f2bad1acdbef8fc95d581f36182bf1caebe07243b92dd90175bba1bff37b7a"
+  },
+  {
+   "scene_id": "scene9",
+   "selector": "#scene9",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s09.mp3",
+   "audio_file": "s09.mp3",
+   "duration": 25.365,
+   "paragraph_start_seconds": [
+    0.0,
+    2.209,
+    7.557,
+    10.196,
+    15.006,
+    20.78
+   ],
+   "text_hash": "35e1ca1a40f96c74674d8b1e73062950ebadc2de4f49b2518bc5556f67894319",
+   "synthesis_hash": "8df7e76455feb92f0fdfce4a67857213e8fd8a05ae082a1f7f024ddb72b94215",
+   "audio_hash": "7941829c274c95c3bf8d73f42344b17080b3057d33476c7691aaf4122b821765"
+  },
+  {
+   "scene_id": "scene10",
+   "selector": "#scene10",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s10.mp3",
+   "audio_file": "s10.mp3",
+   "duration": 27.246,
+   "paragraph_start_seconds": [
+    0.0,
+    2.5,
+    6.555,
+    17.894,
+    22.564
+   ],
+   "text_hash": "3da04e48c558e225a6b3ec1041e04701fc5c5a001eb697e5d7199b06da794fbe",
+   "synthesis_hash": "213b7169ff11ce4eb6886023f32d51abffaaf1f290904136236dccd46ade8754",
+   "audio_hash": "52482cf90b479c07ced84df9385b0f2b4490d9c1b6fb4e0561882d679e787310"
+  },
+  {
+   "scene_id": "scene11",
+   "selector": "#scene11",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s11.mp3",
+   "audio_file": "s11.mp3",
+   "duration": 24.033,
+   "paragraph_start_seconds": [
+    0.0,
+    2.697,
+    6.427,
+    15.316,
+    19.36
+   ],
+   "text_hash": "daa4d1870a9195cd53e8b589893bb42a3d82d2bd2fdbb3db1559f7088bcb3c4a",
+   "synthesis_hash": "be508dc31d35f52220dcc9faf1e42d9c3686f67d40eb5baf1fc675bbe176b5ea",
+   "audio_hash": "4a0fb499b5ed4ccb9c6c0ef457491804c15ab8159877baac6436efe4f5c540b1"
+  },
+  {
+   "scene_id": "scene12",
+   "selector": "#scene12",
+   "heading_selector": "h2",
+   "paragraph_selectors": [
+    ".story p"
+   ],
+   "audio_url": "../audio/electric-eel/s12.mp3",
+   "audio_file": "s12.mp3",
+   "duration": 33.28,
+   "paragraph_start_seconds": [
+    0.0,
+    3.103,
+    6.822,
+    14.747,
+    19.488,
+    24.588
+   ],
+   "text_hash": "2135c7a667a24cc042cd56df9e6c384c727ac9dc8e8209fb23bdd737db0f3fbf",
+   "synthesis_hash": "a60df528446d987355257a607fdb27dea64c46e3b3cdf9c7f4031093ff6745f9",
+   "audio_hash": "894cc410e5193a029bf38581de4f494739bf98abd9737f84306527f140a49110"
+  }
+ ]
+}
