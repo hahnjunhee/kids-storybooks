@@ -5,7 +5,7 @@
  "audio_url_prefix": "../audio/electric-eel/",
  "container": "main",
  "sections": "main > section",
- "scope": "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(#notes, 후속 선택 낭독), 푸터.",
+ "scope": "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(section.activity), 푸터.",
  "pronunciation": [
   [
    "860볼트",
@@ -127,6 +127,15 @@
     ".story p"
    ],
    "audio_file": "s12.mp3"
+  }
+ ],
+ "pronunciation_review": [
+  {
+   "scene_id": "scene11",
+   "unit_hash": "46c12f15546f",
+   "preview": "어떤 종류의 전기뱀장어는 최대 860볼트의 전압을 만들",
+   "status": "pending",
+   "note": "낭독 텍스트는 '팔백육십 볼트'로 치환했다(표시 본문은 불변). 음성 인식(ASR)은 890으로 받아 적어 사람 청취 확인 대기."
   }
  ]
 }

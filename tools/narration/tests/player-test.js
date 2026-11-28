@@ -338,7 +338,7 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
     await o1.ctx.close();
     const o2 = await open(browser, mod((b) => b.replace(/"player_version":"[0-9.]+"/, '"player_version":"9.9.9"')));
     await sleep(500);
-    rec('K 플레이어·manifest 버전 불일치 시 낭독 UI를 만들지 않음(읽기는 정상)', (await o2.page.$('.nar-bar')) === null && (await o2.page.evaluate(() => document.querySelectorAll('main > section').length)) === 14);
+    rec('K 플레이어·manifest 버전 불일치: 낭독만 끄고 읽기 방식(세로/페이지)은 유지', (await o2.page.$('.nar-bar')) !== null && (await o2.page.getAttribute('.nar-bar', 'data-narration')) === 'off' && !(await o2.page.isVisible('.nar-play')) && (await o2.page.isVisible('.nar-modes')) && (await o2.page.evaluate(() => document.querySelectorAll('main > section').length)) === 14);
     await o2.ctx.close();
   });
 
@@ -394,6 +394,79 @@ const visibleSections = (page) => page.evaluate(() => [...document.querySelector
     const f = await page.evaluate(() => { document.getElementById('larger').click(); return getComputedStyle(document.documentElement).getPropertyValue('--scale'); });
     rec('M 템플릿 글자 크기 + 버튼 동작', f === '1.10', f);
     await ctx.close();
+  });
+
+  // N. 장애 격리: 낭독 모듈이 실패해도 기본 열람(세로/페이지 넘김)은 유지된다
+  await guard('N 장애 격리', async () => {
+    const t = await open(browser);
+    const raw = await t.page.evaluate(() => fetch(location.href).then((x) => x.text()));
+    await t.ctx.close();
+    const MRE = /(<script type="application\/json" id="narration-manifest">)(.*?)(<\/script>)/s;
+    const mutate = (fn) => (b) => b.replace(MRE, (m, a, j, c) => { const o = JSON.parse(j.replace(/<\\\//g, '</')); const r = fn(o); return a + (typeof r === 'string' ? r : JSON.stringify(o).replace(/<\//g, '<\\/')) + c; });
+    const withRoute = (fn) => ({ route: async (p) => { await p.route('**/korean-electric-eel-storybook.html', (r) => r.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: fn(raw) })); } });
+    // 읽기 방식이 정상인지: 낭독 UI 숨김, 세로↔페이지 전환, 쪽 이동(버튼·스와이프), 세로로 복귀
+    const readingWorks = async (page) => {
+      const m = await page.evaluate(() => ({ narr: document.querySelector('.nar-bar').dataset.narration, play: getComputedStyle(document.querySelector('.nar-play')).display, panel: getComputedStyle(document.querySelector('.nar-panel')).display }));
+      await page.click('.nar-modes [data-mode=page]'); await sleep(300);
+      const v1 = (await visibleSections(page)).filter(Boolean).length;
+      await click(page, '.nar-pager [data-p="1"]'); await click(page, '.nar-pager [data-p="1"]'); await sleep(200);
+      const c1 = await page.textContent('.nar-count');
+      await swipe(page, 300, 300, 60, 300); await sleep(250);
+      const c2 = await page.textContent('.nar-count');
+      await page.keyboard.press('ArrowLeft'); await sleep(200);
+      const c3 = await page.textContent('.nar-count');
+      await page.click('.nar-modes [data-mode=scroll]'); await sleep(500);
+      const v2 = (await visibleSections(page)).every(Boolean);
+      return { off: m.narr === 'off' && m.play === 'none' && m.panel === 'none', ok: v1 === 1 && c1 === '3 / 14' && c2 === '4 / 14' && c3 === '3 / 14' && v2, detail: `${c1},${c2},${c3}` };
+    };
+    const cases = [
+      ['manifest JSON 손상', (b) => b.replace(MRE, (m, a, j, c) => a + '{BROKEN' + j.slice(1) + c)],
+      ['플레이어 버전 불일치', mutate((o) => { o.player_version = '9.9.9'; })],
+      ['manifest.scenes 형식 오류', mutate((o) => { o.scenes = 'x'; })],
+      ['연결되는 장면이 하나도 없음(선택자 오류)', mutate((o) => { o.scenes.forEach((s) => { s.selector = '#nope'; }); })],
+      ['container·sections 선택자 오류(기본값 main > section으로 대체, 낭독은 유지)', mutate((o) => { o.container = '!!bad'; o.sections = '!!bad'; }), false],
+    ];
+    for (const [name, fn, expectOff = true] of cases) {
+      const o = await open(browser, withRoute(fn));
+      await o.page.waitForSelector('.nar-bar'); await sleep(200);
+      const r = await readingWorks(o.page);
+      rec(`N ${name}: ${expectOff ? '낭독 UI는 꺼지고 ' : ''}읽기 방식은 정상`, (expectOff ? r.off : true) && r.ok, r.detail);
+      rec(`N ${name}: 처리되지 않은 오류 없음`, o.errs.length === 0, o.errs.join(' | ').slice(0, 160));
+      await o.ctx.close();
+    }
+    // 음성 파일 누락(404): 낭독은 오류 안내, 읽기 방식은 정상
+    { const o = await open(browser, { route: async (p) => { await p.route('**/audio/electric-eel/**', (r) => r.fulfill({ status: 404, body: 'nf' })); } });
+      await o.page.waitForSelector('.nar-bar');
+      await play(o.page); await waitFor(o.page, () => document.querySelector('.nar-bar').dataset.state === 'error', null, 8000);
+      await o.page.click('.nar-modes [data-mode=page]'); await sleep(300);
+      await click(o.page, '.nar-pager [data-p="1"]'); await swipe(o.page, 300, 300, 60, 300); await sleep(300);
+      const c = await o.page.textContent('.nar-count'); const v = (await visibleSections(o.page)).filter(Boolean).length;
+      await o.page.click('.nar-modes [data-mode=scroll]'); await sleep(400);
+      rec('N 음성 파일 404(오류 안내 중): 페이지 넘김·모드 전환 정상', (await st(o.page)).errVisible && c === '3 / 14' && v === 1 && (await visibleSections(o.page)).every(Boolean), c);
+      rec('N 음성 파일 404: 처리되지 않은 오류 없음', o.errs.length === 0, o.errs.join(' | ').slice(0, 160));
+      await o.ctx.close(); }
+    // 낭독 코드의 런타임 예외(재생 호출이 던짐): 낭독만 꺼지고 읽기 방식 유지
+    { const o = await open(browser, { init: () => { HTMLMediaElement.prototype.play = function () { throw new Error('boom'); }; } });
+      await o.page.waitForSelector('.nar-bar');
+      await play(o.page); await sleep(500);
+      const r = await readingWorks(o.page);
+      rec('N 재생 중 예외 발생: 낭독만 꺼지고 읽기 방식 유지', r.off && r.ok, r.detail);
+      rec('N 재생 중 예외 발생: 처리되지 않은 오류 없음(경고만)', o.errs.length === 0 && o.warns.some((w) => /오류로 낭독을 끔/.test(w)), o.errs.join(' | ').slice(0, 160));
+      await o.ctx.close(); }
+    // 낭독 모듈 초기화 중 예외(오디오 요소 부착 실패): 낭독만 꺼지고 읽기 방식 유지
+    { const o = await open(browser, { init: () => { const orig = Node.prototype.appendChild; Node.prototype.appendChild = function (c) { if (c && c.tagName === 'AUDIO') throw new Error('init-fail'); return orig.apply(this, arguments); }; } });
+      await o.page.waitForSelector('.nar-bar'); await sleep(200);
+      const r = await readingWorks(o.page);
+      rec('N 낭독 초기화 예외: 낭독만 꺼지고 읽기 방식 유지', r.off && r.ok, r.detail);
+      rec('N 낭독 초기화 예외: 처리되지 않은 오류 없음', o.errs.length === 0, o.errs.join(' | ').slice(0, 160));
+      await o.ctx.close(); }
+    // 오프라인 + 본문 불일치에서도 읽기 방식 정상
+    { const o = await open(browser);
+      await o.page.waitForSelector('.nar-bar'); await o.ctx.setOffline(true);
+      await play(o.page); await waitFor(o.page, () => document.querySelector('.nar-bar').dataset.state === 'error', null, 8000);
+      await o.page.click('.nar-modes [data-mode=page]'); await sleep(300); await click(o.page, '.nar-pager [data-p="1"]'); await sleep(200);
+      rec('N 오프라인(오류 안내 중): 페이지 넘김 정상', (await o.page.textContent('.nar-count')) === '2 / 14' && (await visibleSections(o.page)).filter(Boolean).length === 1);
+      await o.ctx.close(); }
   });
 
   await browser.close();
