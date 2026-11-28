@@ -30,7 +30,7 @@
 작품 상태: **읽기 전용**(`none`, 사용자 승인하에 출시 가능) → **낭독 시범**(`pilot_unlistened`) → **낭독 완료**(`approved`). 읽기 전용 작품은 낭독이 준비되면 그 작품만 업데이트한다.
 - `unreviewed`: 합성 직후. 배포 금지.
 - `pilot_unlistened`: 자동 검증 통과, 전 장면 청취 전. `verify.py --allow-pilot`일 때만 시범 배포 허용.
-- `approved`: 사용자가 전 장면을 듣고 승인. 일반 적용 가능. 전 장면 청취 기록을 남긴다.
+- `approved`: 사용자가 전 장면을 듣고 승인. 일반 적용 가능. 전 장면 청취 기록을 `docs/reviews/narration-<slug>-<날짜>.md`에 남긴다(전기뱀장어 승인 기록 참고).
 
 ## 실행 순서 (저장소 루트, MeloTTS 가상환경 필요)
 ```
