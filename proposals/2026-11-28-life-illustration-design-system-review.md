@@ -61,3 +61,29 @@ Foundations(원칙) → Visual Identity(화풍·캐릭터) → Scene Direction(�
 
 ## 8. 한계와 변경 통제
 현재 원본 삽화의 직접 시각 검증은 미완료이며 화풍 분석, 점수, 참조 후보는 잠정안이다. 외부 스튜디오 내부 매뉴얼을 확인했다고 간주하지 않는다. 기존 동화, 제작 가이드, 자동화, 배포 파일은 수정하지 않는다. 별도 브랜치에서 검토하고 승인 후 병합한다.
+
+
+## 9. 통합 결정 — KSDS v1.1 (사용자 승인 2026-11-28)
+GPT 기획안을 우선하며 [Claude 검토안](https://github.com/hahnjunhee/my-claude/blob/ccr-9489ffc9-uforws/docs/plans/kids-storybook-design-references.md)은 선택적으로 반영한다. 이 절은 앞선 잠정안에 우선한다. 승인 범위는 개선 방향이며 실제 스타일 검증 완료를 의미하지 않는다.
+
+### 채택
+- MUST / SHOULD / MAY / MUST NOT / EXAMPLE 등급으로 규칙 관리. 캐릭터 정체성·본문 일치·4:3은 MUST, 자연광·구도 차별화는 SHOULD, 형태 언어·역광은 MAY, 워터마크·불필요한 문자·외형 변형은 MUST NOT.
+- Color Script는 기존 장면 명세에 emotion, lighting, palette, shot, reference를 추가하는 경량 방식. 신규 DB 불필요.
+- 기존 제작 가이드와 충돌 방지. 기존 과학 C형 규칙 유지.
+- 출처 검증 수준 구분: 공식 원문, 2차 자료, 경험적 판단.
+- 형태 언어와 정적 삽화에 유용한 동작 원칙(anticipation, staging, 제한적 exaggeration)은 선택 적용.
+- 외부 스튜디오명 대신 구도·조명·질감 등 구체적 특성으로 프롬프트 작성.
+- 실제 모바일 열람과 어린이 반응은 AI 자체 검수와 별도 기록.
+
+### 통합 구조
+Gold Standard → Foundations → Visual Identity → Scene Direction → Shape & Motion → Visual Literacy → Reference Library → Production → QA → Feedback Loop.
+Reference Library는 Gold Standard, Approved Examples, Anti-patterns, Character Masters, Composition Patterns, Style References로 구분한다. 기존 파일과 명세를 재사용하고 승인 이미지 및 실패 원인을 축적한다. 별도 앱이나 DB는 만들지 않는다.
+
+### 범위 제외
+토스 UX Writing, Material 3 UI 토큰, 접근성 수치, 초기 독자 타이포, 발견 노트 컴포넌트는 별도 UI/본문 개선 과제로 보류. Diátaxis, Evergreen notes, Notion/LLM-Wiki 경계는 제외. CMYK 및 Lexile도 이번 범위에서 제외.
+
+### 실행 게이트
+P0: 원본 추출·시각 검증 → 스타일 참조 선정 → 캐릭터/화풍 분리 → 규칙 등급화 → 경량 프롬프트.
+P1: 장면 명세 Color Script → 구도·형태 언어 → 실내/야외/감정 테스트 → 우수/실패 사례 기록.
+P2: 실제 열람 평가 → 승인 이미지 재사용 → 기존 가이드 연동 → 최종 문서 확정.
+원본 직접 검증 전에는 화풍 수치나 색상값을 확정하지 않는다. 외부 출처 전체 재검증도 미완료다. 단일 기준 저장소는 kids-storybooks이며 my-claude 원문은 수정하지 않는다.
