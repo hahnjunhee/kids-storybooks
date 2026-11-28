@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "player_version": "1.2.0",
+ "player_version": "1.2.1",
  "book_id": "electric-eel",
  "scope": "제목(표지 h1, 장 h2)과 본문 .story p. 제외: 표지 소개 문단, 쪽 번호(.eyebrow), 발견 노트(#notes, 후속 선택 낭독), 푸터.",
  "engine": "MeloTTS",

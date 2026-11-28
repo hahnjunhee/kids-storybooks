@@ -135,6 +135,19 @@ class MakeAdapter(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertEqual(rd(self.out), before)
 
+    def test_custom_selectors_for_non_template_books(self):
+        html = BOOK.replace("<h1>제목</h1>", "<h2>제목</h2>").replace('<div class="story"><p>숲에 갔어요.</p>', '<p class="lead">“안녕!”</p><div class="story"><p>숲에 갔어요.</p>') % NOTES
+        wr(self.html, html)
+        r = self.make("--cover-heading", "h2", "--paragraphs", ".lead,.story p")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        ad = self.load()
+        self.assertEqual(ad["scenes"][0]["heading"], "h2")
+        self.assertEqual(ad["scenes"][1]["paragraphs"], [".lead", ".story p"])
+        # 기본 선택자로는 표지 h1이 없어 오류
+        wr(self.html, html)
+        r2 = run([MAKE, "--html", self.html, "--book-id", "tbook", "--out", self.out + "2"])
+        self.assertNotEqual(r2.returncode, 0)
+
     def test_book_id_must_be_slug_and_match_on_update(self):
         self.book()
         r = run([MAKE, "--html", self.html, "--book-id", "Bad_ID", "--out", self.out])
