@@ -19,10 +19,12 @@ p{margin:6px 0}
 .tag{display:inline-block;background:var(--on);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.8rem;color:var(--sub)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
 .sub{color:var(--sub);font-size:.9rem}
-.speed{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:10px 0;border-bottom:1px solid var(--line)}
-.speed .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.speed{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0;margin:10px 0;border-bottom:1px solid var(--line)}
+#rateNote{font-size:.82rem;margin-top:2px}
+.speed .row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:center}
+.speed .lab{margin-bottom:4px}
 button,select{font:inherit;color:inherit}
-.pill{min-height:44px;min-width:76px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pill{min-height:44px;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 2px;font-size:.9rem;cursor:pointer}
 .pill[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 audio{width:100%;margin:8px 0}
 .meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
@@ -40,7 +42,7 @@ select{min-height:44px;border:1px solid var(--line);border-radius:8px;background
 .copy{min-height:44px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:8px 16px;font-weight:700;cursor:pointer}
 textarea{width:100%;min-height:150px;margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--card);color:var(--ink);font:inherit;font-size:.88rem}
 a{color:var(--accent)}
-@media (max-width:360px){.pill{min-width:64px;padding:6px 8px}}
+@media (max-width:360px){.speed .row{gap:4px}.pill{font-size:.82rem}}
 </style>
 </head>
 <body>
@@ -50,10 +52,14 @@ a{color:var(--accent)}
 <p class="sub">《찌릿찌릿! 전기뱀장어의 비밀》 1~3장 본문을 MeloTTS 한국어(KR 화자)로 합성한 세 가지 버전입니다. 세 버전은 <b>같은 본문 13문단</b>이고 소리의 처리 방식만 다릅니다. 이어폰이나 스피커로 들어 보고 아래 평가표에 점수를 남겨 주세요. AI로 합성한 음성입니다.</p>
 
 <div class="speed" role="group" aria-label="재생 속도">
-  <div class="row"><b>재생 속도</b>
+  <div class="lab"><b>재생 속도</b></div>
+  <div class="row">
     <button class="pill" data-rate="0.9" aria-pressed="false">0.9배</button>
     <button class="pill" data-rate="1" aria-pressed="true">1.0배</button>
     <button class="pill" data-rate="1.15" aria-pressed="false">1.15배</button>
+    <button class="pill" data-rate="1.25" aria-pressed="false">1.25배</button>
+    <button class="pill" data-rate="1.35" aria-pressed="false">1.35배</button>
+    <button class="pill" data-rate="1.5" aria-pressed="false">1.5배</button>
   </div>
   <div class="sub" id="rateNote"></div>
 </div>
@@ -113,10 +119,10 @@ function setRate(r){rate=r;
   [].forEach.call(document.querySelectorAll('.pill'),function(b){b.setAttribute('aria-pressed',String(+b.dataset.rate===r))});
   Object.keys(audios).forEach(function(k){audios[k].playbackRate=r;audios[k].defaultPlaybackRate=r});
   D.versions.forEach(function(v){var e=document.getElementById('eff'+v.key);if(e)e.textContent=r+'배 재생 시 약 '+mmss(v.duration/r)});
-  document.getElementById('rateNote').textContent='모든 음성에 같은 속도가 적용됩니다. 음높이는 유지됩니다(브라우저 기본). 속도 때문에 어색한 부분이 있으면 메모해 주세요.';
+  document.getElementById('rateNote').textContent='세 음성에 같은 속도 적용 · 음높이는 유지(브라우저 기본)';
   lsSet('nt-rate',String(r))}
 [].forEach.call(document.querySelectorAll('.pill'),function(b){b.addEventListener('click',function(){setRate(+b.dataset.rate)})});
-var saved=parseFloat(lsGet('nt-rate'));setRate([0.9,1,1.15].indexOf(saved)>=0?saved:1);
+var saved=parseFloat(lsGet('nt-rate'));setRate([0.9,1,1.15,1.25,1.35,1.5].indexOf(saved)>=0?saved:1);
 
 var ev=document.getElementById('eval');
 D.versions.forEach(function(v){
