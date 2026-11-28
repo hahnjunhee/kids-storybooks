@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>낭독 음성 품질 검증 · 반짝반짝 그림책 도서관</title>
+<style>
+:root{--bg:#fff8ec;--card:#fff;--ink:#2b2418;--sub:#6b5f4c;--line:#eadfc9;--accent:#e07a1f;--accent-ink:#fff;--on:#fff0d4;--hl:#ffe9a8}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1a14;--card:#27231b;--ink:#f3ecdd;--sub:#b9ae98;--line:#3c3528;--accent:#f0a14f;--accent-ink:#1d1a14;--on:#3a3120;--hl:#5a4a1f}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+main{max-width:720px;margin:0 auto;padding:16px 16px 64px}
+h1{font-size:1.35rem;line-height:1.35;margin:8px 0 4px}
+h2{font-size:1.1rem;margin:0 0 8px}
+h3{font-size:.95rem;margin:14px 0 6px}
+p{margin:6px 0}
+.tag{display:inline-block;background:var(--on);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.8rem;color:var(--sub)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
+.sub{color:var(--sub);font-size:.9rem}
+.speed{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin:10px 0;border-bottom:1px solid var(--line)}
+.speed .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button,select{font:inherit;color:inherit}
+.pill{min-height:44px;min-width:76px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pill[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+audio{width:100%;margin:8px 0}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.meta span{background:var(--on);border-radius:8px;padding:2px 9px;font-size:.85rem}
+ul.set{margin:4px 0 8px;padding-left:18px;font-size:.88rem;color:var(--sub)}
+ul.set li{margin:2px 0}
+.scene{font-weight:700;margin:12px 0 4px;font-size:.92rem}
+.para{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;padding:8px 10px;min-height:44px;cursor:pointer;line-height:1.55}
+.para small{color:var(--sub);margin-right:6px;font-variant-numeric:tabular-nums}
+.para.on{background:var(--hl);border-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 88px;gap:6px;align-items:center;margin:4px 0}
+select{min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:4px 8px}
+.score{font-weight:700;margin:8px 0}
+.warn{color:#b3261e;font-weight:700}
+.copy{min-height:44px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:8px 16px;font-weight:700;cursor:pointer}
+textarea{width:100%;min-height:150px;margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--card);color:var(--ink);font:inherit;font-size:.88rem}
+a{color:var(--accent)}
+@media (max-width:360px){.pill{min-width:64px;padding:6px 8px}}
+</style>
+</head>
+<body>
+<main>
+<span class="tag">Phase 0 · 시험용 페이지 · 도서관과 연결되지 않음</span>
+<h1>낭독 음성 품질 검증</h1>
+<p class="sub">《찌릿찌릿! 전기뱀장어의 비밀》 1~3장 본문을 MeloTTS 한국어(KR 화자)로 합성한 세 가지 버전입니다. 세 버전은 <b>같은 본문 13문단</b>이고 소리의 처리 방식만 다릅니다. 이어폰이나 스피커로 들어 보고 아래 평가표에 점수를 남겨 주세요. AI로 합성한 음성입니다.</p>
+
+<div class="speed" role="group" aria-label="재생 속도">
+  <div class="row"><b>재생 속도</b>
+    <button class="pill" data-rate="0.9" aria-pressed="false">0.9배</button>
+    <button class="pill" data-rate="1" aria-pressed="true">1.0배</button>
+    <button class="pill" data-rate="1.15" aria-pressed="false">1.15배</button>
+  </div>
+  <div class="sub" id="rateNote"></div>
+</div>
+
+<div id="cards"></div>
+
+<section class="card" aria-labelledby="evh">
+  <h2 id="evh">청취 평가표 (1~5점)</h2>
+  <p class="sub">기준과 가중치는 통합 기획안 v1.1 §5를 따릅니다. 가중합 80 이상 채택 권장, 65~79 보완, 65 미만 대체 엔진 검토. 발음이 3점 미만이면 점수와 상관없이 재검수합니다. 입력한 점수는 이 기기에만 저장됩니다.</p>
+  <div id="eval"></div>
+  <button class="copy" id="copyBtn" type="button">결과 텍스트 만들기</button>
+  <textarea id="out" readonly aria-label="평가 결과" placeholder="버튼을 누르면 평가 결과가 여기에 표시됩니다. 복사해서 전달해 주세요."></textarea>
+</section>
+
+<p class="sub" id="foot"></p>
+</main>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function(){
+var D=JSON.parse(document.getElementById('data').textContent);
+var TITLES={1:'아마존으로 떠나요!',2:'길쭉한 물고기',3:'특별한 능력'};
+var CRIT=[['발음',25],['자연스러움',25],['어린이 친화 음색',20],['속도·호흡',15],['편안함',10],['연결성',5]];
+var rate=1,audios={},store={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function mmss(s){var m=Math.floor(s/60),r=Math.round(s%60);if(r===60){m++;r=0}return m+':'+(r<10?'0':'')+r}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+var cards=document.getElementById('cards');
+D.versions.forEach(function(v){
+  var sec=document.createElement('section');sec.className='card';sec.setAttribute('aria-labelledby','h'+v.key);
+  var html='<h2 id="h'+v.key+'">'+esc(v.label)+'</h2>'
+   +'<div class="meta"><span>재생 시간 '+mmss(v.duration)+' ('+v.duration.toFixed(1)+'초)</span><span>낭독 시간 '+v.speech.toFixed(1)+'초</span><span>파일 '+(v.bytes/1024).toFixed(1)+' KB</span><span id="eff'+v.key+'"></span></div>'
+   +'<audio id="au'+v.key+'" controls preload="metadata" src="'+v.file+'"></audio>'
+   +'<h3>생성 설정</h3><ul class="set">'+v.settings.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ul>'
+   +'<h3>본문 (문단을 누르면 그 위치부터 재생)</h3>';
+  var last=null;
+  v.paragraphs.forEach(function(p,i){
+    if(p.scene!==last){last=p.scene;html+='<div class="scene">'+p.scene+'장 · '+esc(TITLES[p.scene]||'')+'</div>'}
+    html+='<button type="button" class="para" data-v="'+v.key+'" data-i="'+i+'"><small>'+mmss(p.start)+'</small>'+esc(p.text)+'</button>';
+  });
+  html+='<p class="sub"><a href="'+v.file+'" download>MP3 파일 직접 열기</a></p>';
+  sec.innerHTML=html;cards.appendChild(sec);
+  var au=sec.querySelector('audio');audios[v.key]=au;
+  au.addEventListener('play',function(){Object.keys(audios).forEach(function(k){if(audios[k]!==au)audios[k].pause()});au.playbackRate=rate});
+  au.addEventListener('loadedmetadata',function(){au.playbackRate=rate});
+  au.addEventListener('timeupdate',function(){mark(v,au.currentTime)});
+  au.addEventListener('error',function(){var n=document.createElement('p');n.className='warn';n.textContent='이 음성 파일을 불러오지 못했습니다. 연결을 확인하고 새로고침해 주세요.';au.after(n)});
+});
+function mark(v,t){var idx=-1;v.paragraphs.forEach(function(p,i){if(t>=p.start-0.05)idx=i});
+  [].forEach.call(cards.querySelectorAll('.para[data-v="'+v.key+'"]'),function(b){b.classList.toggle('on',+b.dataset.i===idx)})}
+cards.addEventListener('click',function(e){var b=e.target.closest('.para');if(!b)return;
+  var v=D.versions.filter(function(x){return x.key===b.dataset.v})[0],au=audios[v.key];
+  au.currentTime=v.paragraphs[+b.dataset.i].start;var pr=au.play();if(pr&&pr.catch)pr.catch(function(){})});
+
+function setRate(r){rate=r;
+  [].forEach.call(document.querySelectorAll('.pill'),function(b){b.setAttribute('aria-pressed',String(+b.dataset.rate===r))});
+  Object.keys(audios).forEach(function(k){audios[k].playbackRate=r;audios[k].defaultPlaybackRate=r});
+  D.versions.forEach(function(v){var e=document.getElementById('eff'+v.key);if(e)e.textContent=r+'배 재생 시 약 '+mmss(v.duration/r)});
+  document.getElementById('rateNote').textContent='모든 음성에 같은 속도가 적용됩니다. 음높이는 유지됩니다(브라우저 기본). 속도 때문에 어색한 부분이 있으면 메모해 주세요.';
+  lsSet('nt-rate',String(r))}
+[].forEach.call(document.querySelectorAll('.pill'),function(b){b.addEventListener('click',function(){setRate(+b.dataset.rate)})});
+var saved=parseFloat(lsGet('nt-rate'));setRate([0.9,1,1.15].indexOf(saved)>=0?saved:1);
+
+var ev=document.getElementById('eval');
+D.versions.forEach(function(v){
+  var s=JSON.parse(lsGet('nt-eval-'+v.key)||'{}');
+  var d=document.createElement('div');d.className='card';
+  var h='<h3>'+esc(v.label)+'</h3>';
+  CRIT.forEach(function(c,i){
+    h+='<div class="row2"><label for="e'+v.key+i+'">'+c[0]+' <span class="sub">(가중치 '+c[1]+')</span></label><select id="e'+v.key+i+'" data-v="'+v.key+'" data-i="'+i+'"><option value="">선택</option>'
+      +[1,2,3,4,5].map(function(n){return '<option value="'+n+'"'+(String(s[i])===String(n)?' selected':'')+'>'+n+'점</option>'}).join('')+'</select></div>';
+  });
+  h+='<div class="score" id="sc'+v.key+'" aria-live="polite"></div>';
+  d.innerHTML=h;ev.appendChild(d);
+});
+function calc(key){var s=JSON.parse(lsGet('nt-eval-'+key)||'{}'),sum=0,all=true;
+  CRIT.forEach(function(c,i){if(!s[i])all=false;else sum+=s[i]/5*c[1]});
+  var el=document.getElementById('sc'+key);
+  if(!all){el.textContent='가중합: 모든 항목을 선택하면 계산됩니다';return null}
+  var verdict=sum>=80?'채택 권장':sum>=65?'보완 필요':'대체 엔진 검토';
+  var note=s[0]<3?' · 발음 3점 미만: 점수와 상관없이 재검수':'';
+  el.innerHTML='가중합 '+sum.toFixed(1)+' / 100 · '+verdict+(s[0]<3?'<span class="warn">'+note+'</span>':'');
+  return {sum:sum,verdict:verdict,note:note}}
+ev.addEventListener('change',function(e){var t=e.target;if(t.tagName!=='SELECT')return;
+  var s=JSON.parse(lsGet('nt-eval-'+t.dataset.v)||'{}');if(t.value)s[t.dataset.i]=+t.value;else delete s[t.dataset.i];
+  lsSet('nt-eval-'+t.dataset.v,JSON.stringify(s));calc(t.dataset.v)});
+D.versions.forEach(function(v){calc(v.key)});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var lines=['낭독 음성 Phase 0 평가 (생성일 '+D.generated+', 선호 재생 속도 '+rate+'배)'];
+  D.versions.forEach(function(v){var s=JSON.parse(lsGet('nt-eval-'+v.key)||'{}'),r=calc(v.key);
+    lines.push(v.label+': '+CRIT.map(function(c,i){return c[0]+' '+(s[i]||'-')}).join(', ')+(r?' → 가중합 '+r.sum.toFixed(1)+' ('+r.verdict+')'+r.note:' → 미완료'))});
+  var ta=document.getElementById('out');ta.value=lines.join('\n');ta.focus();ta.select();
+  try{if(navigator.clipboard){var cp=navigator.clipboard.writeText(ta.value);if(cp&&cp.catch)cp.catch(function(){})}}catch(e){}});
+document.getElementById('foot').textContent='생성일 '+D.generated+' · 시험용 페이지입니다. 기존 그림책과 도서관 홈은 변경되지 않았습니다.';
+})();
+</script>
+</body>
+</html>
