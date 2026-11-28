@@ -24,3 +24,6 @@ npx hyperframes@0.9.104 render --crf 26 --output out.mp4
 - 미검증: 내레이션(TTS), GitHub Actions 렌더, 전체 12장면 렌더 시간, 안드로이드 재생 확인.
 
 MP4는 저장소에 커밋하지 않는다(`.gitignore`). 배포 시 Release 또는 Actions artifact 사용 예정.
+
+## 폰트 라이선스
+`eel-3scene/assets/fonts/PretendardVariable.woff2`는 Pretendard 1.3.9(npm `pretendard`)를 수정 없이 그대로 넣은 파일이다. SIL Open Font License 1.1이며 저작권 표시와 라이선스 원문은 같은 폴더의 `LICENSE-Pretendard.txt`(상류 저장소 LICENSE 원문)에 있다. 이 폰트는 `video-test`에서만 쓰고 도서관, 동화책, `narration-test`에서는 쓰지 않는다.
