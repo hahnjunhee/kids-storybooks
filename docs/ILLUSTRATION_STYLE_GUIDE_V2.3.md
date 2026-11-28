@@ -1,4 +1,4 @@
-# 그림책 이미지 제작 가이드라인 v2.4 — 공개 운영본
+# 그림책 이미지 제작 가이드라인 v2.5 — 공개 운영본
 
 > 적용일: 2026-11-22 · 기준: 비공개 v2.3 통합본의 공개 가능 규칙
 >
@@ -101,70 +101,26 @@ C형에는 아이 및 의인화 캐릭터를 등장시키지 않는다. 과학 �
 
 한 장면에 여러 목적이 있으면 주요 목적을 기준으로 선택한다. 필요하면 A/B 이야기 장면 아래에 C 학습 카드를 별도로 배치한다.
 
-## 7. 프롬프트 구조
+## 7. 프롬프트 구조 — 참조 중심 경량화
 
-### 독립 실행형 프롬프트
-메인 대화에서 장면별 프롬프트를 작성한다. 새 대화에서 이전 맥락 없이 실행할 수 있도록 6블록으로 구성한다: 참조 확인 / 작품·장면·유형 / 기존 BASE·스타일 / 해당 캐릭터(없으면 생략) / 확정 본문·핵심 순간·행동·구도·시간·날씨·과학 제약 / 출력·금지·합격 조건·파일명. 아래 기존 고정문을 보존한다.
+메인 대화에서 원고·스토리보드·자산 ID·필수/금지 요소·승인·해시·파일명을 관리한다. 생성 대화에는 승인된 참조 이미지와 해당 자산의 짧은 생성 지시만 전달한다. 관리대장 조회·승인 절차·전체 본문·검수 보고서·배포 지시를 생성 프롬프트에 반복하지 않는다.
 
-### A·B 조립 순서
+- A/B 기본 150~300자 권장(상한 아님). 참조 일치, 핵심 행동, 구도, 시간/빛, 필수 소품 및 금지 요소만 포함한다.
+- C는 사실 정확성에 필요한 해부·구조·서식 조건을 우선하며 길이 예외를 허용한다.
+- 한 요청에 자산 하나, 가로 4:3, 글자·로고·워터마크·콜라주 금지. 의도적 근접 구도는 핵심 행동이 잘리지 않는 경우 허용한다.
+- 새 대화에서 실제 참조 첨부를 확인한다. 없으면 메인 대화에서 승인된 참조를 전달한 뒤 생성한다. 텍스트만으로 인물 일관성을 보장하지 않는다.
+- 생성 후 검수와 파일 처리는 별도 요청으로 수행한다.
 
-```text
-[1 BASE] → [2 FORMAT] → [3 TYPE] → [4 CHARACTER: PRIVATE]
-→ [5 TIME/WEATHER] → [6 SCENE] → [7 NEGATIVE]
-```
+### 짧은 템플릿
 
-- 고정: BASE·FORMAT·CHARACTER(비공개 원본 참조)·NEGATIVE.
-- 변경: TYPE·TIME/WEATHER·SCENE.
-- 캐릭터 상세 고정문은 공개 문서에 직접 넣지 않는다.
+A/B: 첨부 참조의 인물·의상·소품·화풍 유지. [장소/시간, 핵심 행동, 감정, 카메라 구도, 필수 제약]. 가로 4:3 독립 삽화 1장, 글자·로고·콜라주 금지.
 
-**[1 BASE]**
-
-```text
-Warm, gentle cinematic 2D animated storybook illustration.
-Beautiful hand-painted animation aesthetic, delicate clean linework,
-soft painterly shading, rich environmental details, expressive characters,
-atmospheric perspective, carefully composed scenery, directional natural
-lighting, gentle rim lighting, luminous highlights, harmonious colors,
-warm emotional storytelling. Detailed but not cluttered backgrounds.
-```
-
-**[2 FORMAT]** `4:3 landscape composition, important subjects not cropped.`
-
-**[3 TYPE]**
-- A: `Medium shot focused on the protagonist's action, expression and interaction.`
-- A close-up: `Close-up emotional moment with the character's expression clearly visible.`
-- B: `Wide establishing shot emphasizing scale, atmosphere, season and natural environment. The child is small in frame or absent.`
-
-**[5 TIME/WEATHER]** 실제 원고에 맞는 시간대·기상·광원 한 줄.
-
-**[6 SCENE]** 구체적인 장면, 인물의 행동, 장소와 관찰 포인트.
-
-**[7 NEGATIVE]**
-
-```text
-No text, no letters, no captions, no speech bubbles, no collage,
-no 3D rendering, no plastic-like surfaces, no photorealistic human faces,
-no heavy black outlines, no cropped subject.
-```
-
-### C형 사진 생성 프롬프트
-
-```text
-High-resolution realistic natural history wildlife photography,
-4:3 landscape composition, scientifically accurate anatomy,
-authentic natural habitat, detailed textures, realistic colors,
-natural daylight, sharp focus on key anatomical features,
-educational wildlife field-guide quality. Leave clear composition
-space for the required Korean title and discovery-note text overlay.
-No exaggerated anatomy, no fantasy elements, no artificial colors.
-```
-
-**C형 제작 단계:** 실사형 관찰 이미지 생성 → 사실 검수 → **한국어 제목·설명 필수 작성** → 텍스트 합성 → 모바일·오탈자 검수. 최종 화면에는 반드시 글자가 보여야 한다.
+C: [관찰 대상, 정확한 구조/서식, 시점과 조명]. 사실적 관찰 이미지, 가로 4:3 독립 1장, 아이·의인화·글자·콜라주 금지. 한국어 학습 텍스트는 최종 HTML에 합성한다. C-2는 대상별 독립 자산을 같은 시점·크기·조명으로 생성한다.
 
 ## 8. 일관성·생성·수정
 
-1. 기존 화풍의 골든 샘플 2~3장을 활용한다(Style Master는 대표 참조의 의미이며 별도 관리 체계 없음). A 및 인물 포함 B는 스타일·캐릭터 참조, 인물 없는 B는 스타일만, C는 관찰·도해 참조만 첨부한다. 표지는 등장인물에 따라 적용한다. 실제 첨부 확인 필수, 누락 시 확인 요청. 신규 첫 작품은 필요한 유형별 실제 장면을 먼저 검수하고 본편에 재사용한다.
-2. A·B 장면은 동일한 베이스·참조 이미지로 생성한다.
+1. 작품별 승인된 마스터 레퍼런스를 기본으로 사용한다. 인물 전신·얼굴·의상·색상·핵심 소품·대표 화풍을 고해상도 한 장에 통합하되, 얼굴이나 소품 디테일이 부족하면 별도 참조 1~2장을 추가한다. 기존 승인 캐릭터를 임의로 재설계하지 않는다. A 및 인물 포함 B는 인물/스타일 참조, 인물 없는 B는 스타일 참조, C는 관찰/도해 참조만 사용한다. 실제 첨부 확인 필수. 마스터 시트는 제작용이며 최종 삽화가 아니다. 승인 버전·해시를 비공개로 기록하고 동일 작품에서 고정한다. 신규 참조 변경 시 영향받는 자산만 재검수한다. 참조 미첨부 시 텍스트 대체 생성은 하지 않는다.
+2. A·B 장면은 동일한 승인 참조와 짧은 공통 지시로 생성한다. 유사 행동 장면은 카메라 거리·방향·주 피사체·행동·감정 중 최소 3개를 차별화하는 것을 권장한다.
 3. 장면별 이미지는 **새 개별 대화에서 각각 독립 생성**하고 순차 진행한다. 개별 대화에서 본문·핵심 행동·과학 사실·참조 일치·금지 요소를 즉시 검수하고 저장한다. 메인 대화에서 실제 파일 접근 및 전체 매핑을 확인한다. Space 직접 저장 불가 시 파일 반환 후 사용자 저장 및 재조회한다. 파일명만으로 승인하지 않는다. 콜라주를 잘라 완성 장면으로 사용하지 않는다.
 4. 수정할 때는 바꾸려는 요소를 명확히 지정하고 나머지 스타일을 유지한다.
 5. 모든 장면을 나란히 비교하는 **콘택트 시트**로 색·인물·조명 일관성을 확인한다.
@@ -231,6 +187,7 @@ No exaggerated anatomy, no fantasy elements, no artificial colors.
 
 | 버전 | 내용 |
 | --- | --- |
+| v2.5 (2026-11-28) | 마스터 레퍼런스, 경량 프롬프트, 생성/관리 분리, 참조 고정 및 장면 차별화. 기존 승인 자산 소급 변경 없음. |
 | v2.4 (2026-11-28) | 기존 화풍·유형 유지, 새 대화 독립 프롬프트, 참조·파일 검증, 500KB 목표 및 승인 예외. |
 | v2.3.1 보완 (2026-11-25) | §8에 오류 원인 구분 절차(생성 원본 확인 후 저장·조립 단계 점검) 추가. 버전 번호는 유지. |
 | v2.3.1 (2026-11-22) | 스토리보드 기반 장면별 순차 생성, 동일 대화 기본, C형 원본/완성 카드 구분, 장면별 필수 자산 검증 및 재시도·오류 진단 추가. |
